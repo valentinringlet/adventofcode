@@ -8,3 +8,10 @@ python runner.py
 ```
 
 The code will then prompt you to input which challenge you would like to execute.
+
+
+## Solving new challenges
+When solving new challenges, I recommend to follow the following structure:
+
+1. Add a new python package under [challenges/](challenges/) named after the challenge, e.g. `01/`
+2. Add the sub-class of the [Challenge](shared/challenge.py) abstract class in the [variables](shared/variables.py) file
