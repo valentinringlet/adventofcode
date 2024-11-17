@@ -1,4 +1,4 @@
-from challenge import Challenge
+from shared.challenge import Challenge
 
 
 CHALLENGE_ID = "test"

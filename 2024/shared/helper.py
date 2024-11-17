@@ -1,7 +1,7 @@
 from typing import Type
 
-from challenge import Challenge
-from variables import ALL_SOLVED_CHALLENGES
+from shared.challenge import Challenge
+from shared.variables import ALL_SOLVED_CHALLENGES
 
 
 def get_solved_challenges() -> list[Type[Challenge]]:

@@ -1,4 +1,4 @@
-from helper import (
+from shared.helper import (
     print_intro_message,
     is_user_input_valid_challenge_id,
     get_selected_challenge,
