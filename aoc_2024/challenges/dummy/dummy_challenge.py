@@ -17,11 +17,9 @@ class DummyChallenge(Challenge):
 
     def __init__(self):
         super().__init__()
+        self.__solution = None
 
-    def solve(self):
-        print("Some logic will be executed here.")
-        print("Good job reaching this!\n")
-
+    def _solve(self):
         # Example logic:
         with open(INPUT_FILE, "r") as file:
             challenge_input = file.readlines()
@@ -34,8 +32,16 @@ class DummyChallenge(Challenge):
                 else:
                     result += line[0]
 
-        print(f"Solution: '{result}'")
+        self.__solution = result
 
     @staticmethod
     def _is_comment(line: str) -> bool:
         return line.startswith(COMMENT_SYMBOL)
+
+    def print_solution(self):
+        if not self.__solution:
+            raise ValueError(
+                "Method solve() needs to be called before calling get_solution()"
+            )
+
+        print(f"The secret hidden in the input file is '{self.__solution}'")
