@@ -1,5 +1,12 @@
 from abc import abstractmethod, ABCMeta
+from dataclasses import dataclass
 from timeit import timeit
+
+
+@dataclass
+class DaySolutionDTO:
+    solution_part1: str
+    solution_part2: str
 
 
 class Challenge(metaclass=ABCMeta):
