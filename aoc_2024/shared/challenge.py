@@ -13,7 +13,7 @@ class Challenge(metaclass=ABCMeta):
         )
 
         print(f"Execution time: {execution_time:.6f} seconds")
-        print(f"Solution: ", end="")
+        print(f"Solution: ")
         self.print_solution()
 
     @abstractmethod
