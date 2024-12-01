@@ -4,7 +4,7 @@ from timeit import timeit
 
 class Challenge(metaclass=ABCMeta):
     def __init__(self):
-        pass
+        self._solution = None
 
     def solve(self):
         NUM_EXECUTIONS_TO_MEASURE_EXECUTION_TIME = 1
@@ -20,8 +20,24 @@ class Challenge(metaclass=ABCMeta):
     def _solve(self):
         pass
 
-    @abstractmethod
+    def set_solution(self, solution):
+        """ This method needs to be called by the implementation of _solve()
+        """
+        self._solution = solution
+
+    def get_solution(self):
+        return self._solution
+
     def print_solution(self):
+        if not self._solution:
+            raise ValueError(
+                "Method solve() needs to be called before calling get_solution()"
+            )
+
+        self._print_solution()
+
+    @abstractmethod
+    def _print_solution(self):
         pass
 
     @classmethod

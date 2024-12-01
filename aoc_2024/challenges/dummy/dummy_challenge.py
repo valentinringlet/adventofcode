@@ -32,16 +32,11 @@ class DummyChallenge(Challenge):
                 else:
                     result += line[0]
 
-        self.__solution = result
+        self.set_solution(result)
 
     @staticmethod
     def _is_comment(line: str) -> bool:
         return line.startswith(COMMENT_SYMBOL)
 
-    def print_solution(self):
-        if not self.__solution:
-            raise ValueError(
-                "Method solve() needs to be called before calling get_solution()"
-            )
-
-        print(f"The secret hidden in the input file is '{self.__solution}'")
+    def _print_solution(self):
+        print(f"The secret hidden in the input file is '{self.get_solution()}'")
