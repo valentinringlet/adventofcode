@@ -24,9 +24,14 @@ class ChallengeDay02(Challenge):
         num_valid_levels_part1 = sum(
             [self.__is_valid_level_part1(level) for level in input_data]
         )
+        num_valid_levels_part2 = sum(
+            [self.__is_valid_level_part2(level) for level in input_data]
+        )
 
         # 3. set the solution
-        self.set_solution(DaySolutionDTO(str(num_valid_levels_part1), "not solved yet"))
+        self.set_solution(
+            DaySolutionDTO(str(num_valid_levels_part1), str(num_valid_levels_part2))
+        )
 
     @staticmethod
     def parse_input_data(input_file_path: str) -> list[list[int]]:
@@ -48,6 +53,16 @@ class ChallengeDay02(Challenge):
             level_is_all_increasing or level_is_all_decreasing
         ) and level_has_increases_in_range
 
+    def __is_valid_level_part2(self, level: list[int]) -> bool:
+        if self.__is_valid_level_part1(level):
+            return True
+        else:
+            # Can we remove 1 number from the level to make it work?
+            for i in range(len(level)):
+                if self.__is_valid_level_part1(level[:i] + level[i + 1 :]):
+                    return True
+            return False
+
     @staticmethod
     def __is_level_fully_increasing(level: list[int]) -> bool:
         return all([level[i + 1] - level[i] >= 0 for i in range(len(level) - 1)])
@@ -66,4 +81,7 @@ class ChallengeDay02(Challenge):
         solution = self.get_solution()
         print(
             f"- part 1: There are {solution.solution_part1} valid levels in the input"
+        )
+        print(
+            f"- part 2: There are {solution.solution_part2} valid levels in the input if you can remove a single number per level"
         )
