@@ -14,7 +14,7 @@ def aoc_2024_runner():
     # 2. Continue asking until the user picks a valid challenge id
     while not is_user_input_valid_challenge_id(user_input):
         print_wrong_input_message()
-        user_input = input()
+        user_input = input().strip()
     print("-------------------------------------")
 
     # 3. Run that challenge
