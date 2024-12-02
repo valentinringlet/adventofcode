@@ -32,7 +32,7 @@ class Challenge(metaclass=ABCMeta):
         """
         self._solution = solution
 
-    def get_solution(self):
+    def get_solution(self) -> DaySolutionDTO:
         return self._solution
 
     def print_solution(self):
@@ -49,5 +49,5 @@ class Challenge(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def id(cls):
+    def id(cls) -> str:
         pass
