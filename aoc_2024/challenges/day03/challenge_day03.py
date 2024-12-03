@@ -1,4 +1,5 @@
 import os
+import re
 
 from shared.challenge import Challenge, DaySolutionDTO
 
@@ -18,34 +19,24 @@ class ChallengeDay03(Challenge):
         input_data = self.parse_input_data(input_file_path)
 
         # 2. compute solution
-        valid_mul_instructions = self.find_valid_mul_instructions(input_data)
-        result_part1 = sum([first * second for first, second in valid_mul_instructions])
+        solution_part1 = self._solve_part1(input_data)
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(result_part1), "not solved yet"))
+        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
 
     @staticmethod
     def parse_input_data(input_file_path) -> str:
         with open(input_file_path, "r") as file:
             return "".join([line.strip() for line in file.readlines()])
 
-    def find_valid_mul_instructions(self, input_data: str):
-        i = 0
-        valid_mul_instructions = []
-        while i < len(input_data):
-            next_mul_start_idx = input_data.find("mul(", i)
-            next_comma_idx = input_data.find(",", next_mul_start_idx + 1)
-            next_bracket_idx = input_data.find(")", next_comma_idx + 1)
-            if (
-                next_mul_start_idx == -1
-                or next_comma_idx == -1
-                or next_bracket_idx == -1
-            ):
-                # no more valid instructions in this file
-                return valid_mul_instructions
-
-            first_parameter = input_data[
-                next_mul_start_idx + len("mul(") : next_comma_idx
+    @staticmethod
+    def _solve_part1(input_data: str):
+        mul_instruction_regex = r"mul\((\d+),(\d+)\)"
+        mul_instructions = re.findall(mul_instruction_regex, input_data)
+        return sum(
+            [
+                int(first_param) * int(second_param)
+                for first_param, second_param in mul_instructions
             ]
             second_parameter = input_data[next_comma_idx + 1 : next_bracket_idx]
             if not first_parameter.isnumeric() or not second_parameter.isnumeric():
