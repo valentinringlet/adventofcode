@@ -56,9 +56,37 @@ class ChallengeDay03(Challenge):
             for match in re.finditer(MUL_INSTRUCTION_REGEX, input_data)
         ]
 
-            # we found a valid instruction
-            valid_mul_instructions.append((int(first_parameter), int(second_parameter)))
-            i = next_bracket_idx + 1
+        non_ignored_mul_instructions = []
+        ignored_range_idx = 0
+        ignored_range_start, ignored_range_end = ignored_mul_instruction_ranges[
+            ignored_range_idx
+        ]
+        for mul_idx, mul_params in mul_instruction_info:
+            # Fast-forward to the relevant ignored range
+            while mul_idx > ignored_range_end and ignored_range_idx < len(
+                ignored_mul_instruction_ranges
+            ):
+                ignored_range_idx += 1
+                if ignored_range_idx == len(ignored_mul_instruction_ranges):
+                    ignored_range_start = len(input_data)
+                    ignored_range_end = ignored_range_start
+                else:
+                    (
+                        ignored_range_start,
+                        ignored_range_end,
+                    ) = ignored_mul_instruction_ranges[ignored_range_idx]
+
+            if not (ignored_range_start < mul_idx < ignored_range_end):
+                # this mul is not ignored
+                first_param, second_param = mul_params
+                non_ignored_mul_instructions.append((first_param, second_param))
+
+        return sum(
+            [
+                int(first_param) * int(second_param)
+                for first_param, second_param in non_ignored_mul_instructions
+            ]
+        )
 
     def _print_solution(self):
         solution = self.get_solution()
