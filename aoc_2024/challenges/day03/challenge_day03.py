@@ -4,6 +4,11 @@ import re
 from shared.challenge import Challenge, DaySolutionDTO
 
 
+IGNORE_MUL_INSTRUCTION = "don't()"
+DONT_IGNORE_MUL_INSTRUCTION = "do()"
+MUL_INSTRUCTION_REGEX = r"mul\((\d+),(\d+)\)"
+
+
 class ChallengeDay03(Challenge):
     def __init__(self):
         super().__init__()
@@ -20,9 +25,11 @@ class ChallengeDay03(Challenge):
 
         # 2. compute solution
         solution_part1 = self._solve_part1(input_data)
+        solution_part2 = self._solve_part2(input_data)
+        # PROBLEM: CURRENT ANSWER FOR PART 2 IS TOO LOW
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
+        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
 
     @staticmethod
     def parse_input_data(input_file_path) -> str:
@@ -30,18 +37,24 @@ class ChallengeDay03(Challenge):
             return "".join([line.strip() for line in file.readlines()])
 
     @staticmethod
-    def _solve_part1(input_data: str):
-        mul_instruction_regex = r"mul\((\d+),(\d+)\)"
-        mul_instructions = re.findall(mul_instruction_regex, input_data)
+    def _solve_part1(input_data: str) -> int:
+        mul_instructions = re.findall(MUL_INSTRUCTION_REGEX, input_data)
         return sum(
             [
                 int(first_param) * int(second_param)
                 for first_param, second_param in mul_instructions
             ]
-            second_parameter = input_data[next_comma_idx + 1 : next_bracket_idx]
-            if not first_parameter.isnumeric() or not second_parameter.isnumeric():
-                i = next_mul_start_idx + 1
-                continue
+        )
+
+    def _solve_part2(self, input_data: str) -> int:
+        ignored_mul_instruction_ranges = [
+            (match.start(0), match.start(1))
+            for match in re.finditer(r"don't\(\).*(do\(\)?)", input_data)
+        ]
+        mul_instruction_info = [
+            (match.start(), match.groups())
+            for match in re.finditer(MUL_INSTRUCTION_REGEX, input_data)
+        ]
 
             # we found a valid instruction
             valid_mul_instructions.append((int(first_parameter), int(second_parameter)))
@@ -51,4 +64,7 @@ class ChallengeDay03(Challenge):
         solution = self.get_solution()
         print(
             f"- part 1: The result of the valid mul instructions is {solution.solution_part1}"
+        )
+        print(
+            f"- part 2: The result of the valid mul instructions which are not disabled is {solution.solution_part2}"
         )
