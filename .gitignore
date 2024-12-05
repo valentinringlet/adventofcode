@@ -1,5 +1,5 @@
 # ignore text input files
-*.txt
+*input*.txt
 # ignore all PyCharm files
 **/.idea/*
 **/__pycache__/*
