@@ -3,9 +3,8 @@ import re
 
 from shared.challenge import Challenge, DaySolutionDTO
 
-
-IGNORE_MUL_INSTRUCTION = "don't()"
-DONT_IGNORE_MUL_INSTRUCTION = "do()"
+DISABLE_MUL_INSTRUCTION_REGEX = r"don't\(\)"
+ENABLE_MUL_INSTRUCTION_REGEX = r"do\(\)"
 MUL_INSTRUCTION_REGEX = r"mul\((\d+),(\d+)\)"
 
 
@@ -19,14 +18,13 @@ class ChallengeDay03(Challenge):
 
     def _solve(self):
         # 1. read input data
-        input_file = "input_day03.txt"  # "test_input.txt"
+        input_file = "input_day03.txt"
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         input_data = self.parse_input_data(input_file_path)
 
         # 2. compute solution
         solution_part1 = self._solve_part1(input_data)
         solution_part2 = self._solve_part2(input_data)
-        # PROBLEM: CURRENT ANSWER FOR PART 2 IS TOO LOW
 
         # 3. set solution
         self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
@@ -46,45 +44,46 @@ class ChallengeDay03(Challenge):
             ]
         )
 
-    def _solve_part2(self, input_data: str) -> int:
-        ignored_mul_instruction_ranges = [
-            (match.start(0), match.start(1))
-            for match in re.finditer(r"don't\(\).*(do\(\)?)", input_data)
-        ]
-        mul_instruction_info = [
-            (match.start(), match.groups())
+    @staticmethod
+    def _solve_part2(input_data: str) -> int:
+        mul_instructions = [
+            (match.start(), "MUL", match.groups())
             for match in re.finditer(MUL_INSTRUCTION_REGEX, input_data)
         ]
-
-        non_ignored_mul_instructions = []
-        ignored_range_idx = 0
-        ignored_range_start, ignored_range_end = ignored_mul_instruction_ranges[
-            ignored_range_idx
+        disable_mul_instructions = [
+            (match.start(), "DONT")
+            for match in re.finditer(DISABLE_MUL_INSTRUCTION_REGEX, input_data)
         ]
-        for mul_idx, mul_params in mul_instruction_info:
-            # Fast-forward to the relevant ignored range
-            while mul_idx > ignored_range_end and ignored_range_idx < len(
-                ignored_mul_instruction_ranges
-            ):
-                ignored_range_idx += 1
-                if ignored_range_idx == len(ignored_mul_instruction_ranges):
-                    ignored_range_start = len(input_data)
-                    ignored_range_end = ignored_range_start
-                else:
-                    (
-                        ignored_range_start,
-                        ignored_range_end,
-                    ) = ignored_mul_instruction_ranges[ignored_range_idx]
+        enable_mul_instructions = [
+            (match.start(), "DO")
+            for match in re.finditer(ENABLE_MUL_INSTRUCTION_REGEX, input_data)
+        ]
 
-            if not (ignored_range_start < mul_idx < ignored_range_end):
-                # this mul is not ignored
-                first_param, second_param = mul_params
-                non_ignored_mul_instructions.append((first_param, second_param))
+        # Make a list of all instructions ordered by the index at which they occur
+        all_instructions = (
+            mul_instructions + disable_mul_instructions + enable_mul_instructions
+        )
+        all_instructions.sort(key=lambda instruction: instruction[0])
+
+        # Make a state machine iterate over the instructions
+        mul_enabled = True
+        valid_mul_instructions = []
+        for instruction in all_instructions:
+            instruction_type = instruction[1]
+            match instruction_type:
+                case "DO":
+                    mul_enabled = True
+                case "DONT":
+                    mul_enabled = False
+                case "MUL":
+                    if mul_enabled:
+                        first_param, second_param = instruction[2]
+                        valid_mul_instructions.append((int(first_param), int(second_param)))
 
         return sum(
             [
-                int(first_param) * int(second_param)
-                for first_param, second_param in non_ignored_mul_instructions
+                first_param * second_param
+                for first_param, second_param in valid_mul_instructions
             ]
         )
 
