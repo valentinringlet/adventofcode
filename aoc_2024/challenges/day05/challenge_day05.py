@@ -1,7 +1,16 @@
 import os
 from collections import defaultdict
+from collections.abc import Callable
 
 from shared.challenge import Challenge, DaySolutionDTO
+
+
+def page_that_should_come_before_selector(page_ordering_rule: tuple[int, int]) -> int:
+    return page_ordering_rule[0]
+
+
+def page_that_should_come_after_selector(page_ordering_rule: tuple[int, int]) -> int:
+    return page_ordering_rule[1]
 
 
 class ChallengeDay05(Challenge):
@@ -58,21 +67,23 @@ class ChallengeDay05(Challenge):
         sum_middle_pages = sum([update[len(update) // 2] for update in valid_updates])
         return sum_middle_pages
 
-    @staticmethod
     def _get_valid_updates(
-        page_ordering_rules: list[tuple[int, int]], page_updates: list[list[int]]
+        self,
+        page_ordering_rules: list[tuple[int, int]],
+        page_updates: list[list[int]],
     ):
-        ordering_rules_dict = defaultdict(list)
-        for rule in page_ordering_rules:
-            page_before, page_after = rule
-            ordering_rules_dict[page_before].append(page_after)
+        page_ordering_rules_dict = self._make_dict_of_ordering_rules(
+            page_ordering_rules,
+            key_selector=page_that_should_come_before_selector,
+            value_selector=page_that_should_come_after_selector,
+        )
 
         valid_page_updates = []
         for update in page_updates:
             pages_seen_in_curr_update = []
             valid_update = True
             for curr_page in update:
-                pages_to_appear_after_curr_page = ordering_rules_dict[curr_page]
+                pages_to_appear_after_curr_page = page_ordering_rules_dict[curr_page]
                 pages_seen_before_that_should_appear_after = set(
                     pages_seen_in_curr_update
                 ).intersection(pages_to_appear_after_curr_page)
@@ -86,3 +97,16 @@ class ChallengeDay05(Challenge):
                 valid_page_updates.append(update)
 
         return valid_page_updates
+
+    @staticmethod
+    def _make_dict_of_ordering_rules(
+        page_ordering_rules: list[tuple[int, int]],
+        key_selector: Callable[[tuple[int, int]], int],
+        value_selector: Callable[[tuple[int, int]], int],
+    ) -> dict[int, list[int]]:
+        ordering_rules_dict = defaultdict(list)
+        for rule in page_ordering_rules:
+            key = key_selector(rule)
+            value = value_selector(rule)
+            ordering_rules_dict[key].append(value)
+        return ordering_rules_dict
