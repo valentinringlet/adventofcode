@@ -149,8 +149,21 @@ class ChallengeDay05(Challenge):
             value_selector=page_that_should_come_before_selector,
         )
 
-        reordered_update = []
+        relevant_page_ordering_rules = defaultdict(list)
         for page in update_to_reorder:
+            pages_that_should_come_before_it = page_ordering_rules_dict[page]
+            pages_from_update_to_reorder = [
+                p for p in pages_that_should_come_before_it if p in update_to_reorder
+            ]
+            relevant_page_ordering_rules[page] = pages_from_update_to_reorder
+
+        reordered_update = []
+        # Add the pages in order from the one with the least constraints to the one with most constraints
+        pages_to_reorder = sorted(
+            update_to_reorder, key=lambda page: len(relevant_page_ordering_rules[page])
+        )
+        for page in pages_to_reorder:
+            # Find the highest index at which there is a page that should appear before `page`
             pages_that_should_appear_before = page_ordering_rules_dict[page]
             max_idx_page_to_appear_before = 0
             for page_to_appear_before in pages_that_should_appear_before:
@@ -162,7 +175,7 @@ class ChallengeDay05(Challenge):
                 except ValueError:
                     pass  # the page does not appear in reordered update
 
-            # insert the page right after the last page it should appear after
+            # Insert the new page right after the last page it should appear after
             reordered_update.insert(max_idx_page_to_appear_before + 1, page)
 
         return reordered_update
