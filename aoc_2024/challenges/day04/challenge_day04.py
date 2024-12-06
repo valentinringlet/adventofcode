@@ -227,7 +227,7 @@ class ChallengeDay04(Challenge):
 
         # FOR DEBUGGING
         """
-        with open("debugging_file.txt", "w") as file:
+        with open("./challenges/day04/debugging_file.txt", "w") as file:
             file.write("# HORIZONTAL MATCHES:\n")
             file.write(
                 "\n".join(
@@ -308,12 +308,12 @@ class ChallengeDay04(Challenge):
 
         # FOR DEBUGGING
         """
-        with open("debugging_file.txt", "w") as file:
+        with open("./challenges/day04/debugging_file.txt", "w") as file:
             file.write("# CROSS MAS MATCHES:\n")
             file.write(
                 "\n".join(
                     [
-                        "".join([str(num) for num in row])
+                        "".join([str(int(num)) for num in row])
                         for row in cross_mas_occurences
                     ]
                 )
