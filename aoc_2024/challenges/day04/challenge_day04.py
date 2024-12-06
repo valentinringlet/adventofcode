@@ -37,9 +37,10 @@ class ChallengeDay04(Challenge):
         # 2. use input data to find all XMAS'es
         solution_part1 = self._solve_part1_approach1(input_data)
         # solution_part1 = self._solve_part1_approach2(input_data)
+        solution_part2 = self._solve_part2(input_data)
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
+        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
 
     @staticmethod
     def parse_input(file_path: str) -> list[str]:
@@ -282,8 +283,51 @@ class ChallengeDay04(Challenge):
 
         return solution_part1
 
+    def _solve_part2(self, input_data: list[str], target_str: str = "MAS"):
+        cross_mas_occurences = [
+            [
+                (
+                    "".join([input_data[y + i][x + i] for i in range(len(target_str))])
+                    in (target_str, target_str[::-1])
+                )
+                and (
+                    "".join(
+                        [
+                            input_data[y + i][x + ((len(target_str) - 1) - i)]
+                            for i in range(len(target_str))
+                        ]
+                    )
+                    in (target_str, target_str[::-1])
+                )
+                for x in range(len(input_data[y]) - (len(target_str) - 1))
+            ]
+            for y in range(len(input_data) - (len(target_str) - 1))
+        ]
+
+        # FOR DEBUGGING
+        """
+        with open("debugging_file.txt", "w") as file:
+            file.write("# CROSS MAS MATCHES:\n")
+            file.write(
+                "\n".join(
+                    [
+                        "".join([str(num) for num in row])
+                        for row in cross_mas_occurences
+                    ]
+                )
+            )
+            file.write("\n")
+        """
+
+        solution_part2 = sum([sum(row) for row in cross_mas_occurences])
+
+        return solution_part2
+
     def _print_solution(self):
         solution = self.get_solution()
         print(
             f"- part 1: There are {solution.solution_part1} occurrences of the XMAS in the input"
+        )
+        print(
+            f"- part 2: There are {solution.solution_part2} occurrences of the X-MAS'es (cross-MAS) in the input"
         )
