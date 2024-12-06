@@ -163,7 +163,7 @@ class ChallengeDay05(Challenge):
         )
         for page in pages_to_reorder:
             # Find the highest index at which there is a page that should appear before `page`
-            pages_that_should_appear_before = page_ordering_rules_dict[page]
+            pages_that_should_appear_before = relevant_page_ordering_rules[page]
             max_idx_page_to_appear_before = 0
             for page_to_appear_before in pages_that_should_appear_before:
                 try:
