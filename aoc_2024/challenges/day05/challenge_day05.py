@@ -26,18 +26,20 @@ class ChallengeDay05(Challenge):
 
         # 2. solve challenge using input data
         solution_part1 = self._solve_part1(input_data)
-        # TODO part 2
+        solution_part2 = self._solve_part2(input_data)
+        # PROBLEM: answer is correct on example input, but is too low on actual input...
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
+        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
 
     def _print_solution(self):
         solution = self.get_solution()
-        # TODO: write what the answer represents
         print(
             f"- part 1: The sum of the middle pages of valid page updates is {solution.solution_part1}"
         )
-        print(f"- part 2: {solution.solution_part2}")
+        print(
+            f"- part 2: The sum of the middle pages of the invalid page updates (after reordering to make them valid) is {solution.solution_part2}"
+        )
 
     @staticmethod
     def parse_input(file_path: str) -> tuple[list[tuple[int, int]], list[list[int]]]:
@@ -110,3 +112,57 @@ class ChallengeDay05(Challenge):
             value = value_selector(rule)
             ordering_rules_dict[key].append(value)
         return ordering_rules_dict
+
+    def _solve_part2(
+        self, input_data: tuple[list[tuple[int, int]], list[list[int]]]
+    ) -> int:
+        page_ordering_rules, page_updates = input_data
+        invalid_updates = self._get_invalid_updates(page_ordering_rules, page_updates)
+        reordered_invalid_updates = [
+            self._reorder_update_to_make_valid(page_ordering_rules, page_update)
+            for page_update in invalid_updates
+        ]
+        sum_middle_pages = sum(
+            [update[len(update) // 2] for update in reordered_invalid_updates]
+        )
+        return sum_middle_pages
+
+    def _get_invalid_updates(
+        self,
+        page_ordering_rules: list[tuple[int, int]],
+        page_updates: list[list[int]],
+    ):
+        valid_updates = self._get_valid_updates(page_ordering_rules, page_updates)
+        invalid_updates = [
+            update for update in page_updates if update not in valid_updates
+        ]
+        return invalid_updates
+
+    def _reorder_update_to_make_valid(
+        self,
+        page_ordering_rules: list[tuple[int, int]],
+        update_to_reorder: list[int],
+    ) -> list[int]:
+        page_ordering_rules_dict = self._make_dict_of_ordering_rules(
+            page_ordering_rules,
+            key_selector=page_that_should_come_after_selector,
+            value_selector=page_that_should_come_before_selector,
+        )
+
+        reordered_update = []
+        for page in update_to_reorder:
+            pages_that_should_appear_before = page_ordering_rules_dict[page]
+            max_idx_page_to_appear_before = 0
+            for page_to_appear_before in pages_that_should_appear_before:
+                try:
+                    idx = reordered_update.index(page_to_appear_before)
+                    max_idx_page_to_appear_before = max(
+                        idx, max_idx_page_to_appear_before
+                    )
+                except ValueError:
+                    pass  # the page does not appear in reordered update
+
+            # insert the page right after the last page it should appear after
+            reordered_update.insert(max_idx_page_to_appear_before + 1, page)
+
+        return reordered_update
