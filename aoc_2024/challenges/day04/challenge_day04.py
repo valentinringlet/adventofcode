@@ -30,7 +30,7 @@ class ChallengeDay04(Challenge):
 
     def _solve(self):
         # 1. read input data
-        input_file = "test_input_part1.txt" # "input_day04.txt"
+        input_file = "test_input_part1.txt"  # "input_day04.txt"
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         input_data = self.parse_input(input_file_path)
 
@@ -46,11 +46,15 @@ class ChallengeDay04(Challenge):
             return [line.strip() for line in file if line.strip() != ""]
 
     def _solve_part1_approach1(self, input_data: list[str]):
-        all_xmas_occurrences = self._get_all_occurrences_of_target_str(input_data, target_str='XMAS')
+        all_xmas_occurrences = self._get_all_occurrences_of_target_str(
+            input_data, target_str="XMAS"
+        )
         solution_part1 = len(all_xmas_occurrences)
         return solution_part1
 
-    def _get_all_occurrences_of_target_str(self, input_data: list[str], target_str: str = "XMAS"):
+    def _get_all_occurrences_of_target_str(
+        self, input_data: list[str], target_str: str = "XMAS"
+    ):
         all_xmas_occurrences = []
         for y in range(len(input_data)):
             for x in range(len(input_data[y])):
@@ -60,22 +64,31 @@ class ChallengeDay04(Challenge):
 
                     if len(possible_moves) != 0:
                         # Try to match the surrounding positions with the next letter and so forth
-                        matches_to_make = [(1, possible_move) for possible_move in possible_moves]
+                        matches_to_make = [
+                            (1, possible_move) for possible_move in possible_moves
+                        ]
                         while len(matches_to_make) != 0:
                             next_match = matches_to_make.pop(0)
                             target_str_idx, move = next_match
                             match_x, match_y = move.pos
 
-                            if input_data[match_y][match_x] == target_str[target_str_idx]:
+                            if (
+                                input_data[match_y][match_x]
+                                == target_str[target_str_idx]
+                            ):
                                 next_target_str_idx = target_str_idx + 1
                                 if next_target_str_idx == len(target_str):
                                     # We have found a complete match!
                                     all_xmas_occurrences.append(move)
                                 else:
                                     # We have matched one more letter, but not yet matched the full target string
-                                    following_move = self._get_possible_move_in_dir(input_data, match_x, match_y, move.dir)
+                                    following_move = self._get_possible_move_in_dir(
+                                        input_data, match_x, match_y, move.dir
+                                    )
                                     if following_move:
-                                        matches_to_make.append((next_target_str_idx, following_move))
+                                        matches_to_make.append(
+                                            (next_target_str_idx, following_move)
+                                        )
 
         return all_xmas_occurrences
 
@@ -87,26 +100,28 @@ class ChallengeDay04(Challenge):
         y_can_decrease = y > 0
         y_can_increase = y < len(input_data) - 1
         if x_can_decrease:
-            connected_positions.append(Move(Direction.LEFT, (x-1, y)))
+            connected_positions.append(Move(Direction.LEFT, (x - 1, y)))
         if x_can_increase:
-            connected_positions.append(Move(Direction.RIGHT, (x+1, y)))
+            connected_positions.append(Move(Direction.RIGHT, (x + 1, y)))
         if y_can_decrease:
-            connected_positions.append(Move(Direction.UP, (x, y-1)))
+            connected_positions.append(Move(Direction.UP, (x, y - 1)))
         if y_can_increase:
-            connected_positions.append(Move(Direction.DOWN, (x, y+1)))
+            connected_positions.append(Move(Direction.DOWN, (x, y + 1)))
         if x_can_decrease and y_can_decrease:
-            connected_positions.append(Move(Direction.UP_LEFT, (x-1, y-1)))
+            connected_positions.append(Move(Direction.UP_LEFT, (x - 1, y - 1)))
         if x_can_decrease and y_can_increase:
-            connected_positions.append(Move(Direction.UP_RIGHT, (x-1, y+1)))
+            connected_positions.append(Move(Direction.UP_RIGHT, (x - 1, y + 1)))
         if x_can_increase and y_can_decrease:
-            connected_positions.append(Move(Direction.DOWN_LEFT, (x+1, y-1)))
+            connected_positions.append(Move(Direction.DOWN_LEFT, (x + 1, y - 1)))
         if x_can_increase and y_can_increase:
-            connected_positions.append(Move(Direction.DOWN_RIGHT, (x+1, y+1)))
+            connected_positions.append(Move(Direction.DOWN_RIGHT, (x + 1, y + 1)))
 
         return connected_positions
 
     @staticmethod
-    def _get_possible_move_in_dir(input_data: list[str], x: int, y: int, direction: Direction) -> Move | None:
+    def _get_possible_move_in_dir(
+        input_data: list[str], x: int, y: int, direction: Direction
+    ) -> Move | None:
         x_can_decrease = x > 0
         x_can_increase = x < len(input_data[y]) - 1
         y_can_decrease = y > 0
@@ -114,28 +129,28 @@ class ChallengeDay04(Challenge):
         match direction:
             case Direction.UP:
                 if y_can_decrease:
-                    return Move(Direction.UP, (x, y-1))
+                    return Move(Direction.UP, (x, y - 1))
             case Direction.DOWN:
                 if y_can_increase:
-                    return Move(Direction.DOWN, (x, y+1))
+                    return Move(Direction.DOWN, (x, y + 1))
             case Direction.LEFT:
                 if x_can_decrease:
-                    return Move(Direction.LEFT, (x-1, y))
+                    return Move(Direction.LEFT, (x - 1, y))
             case Direction.RIGHT:
                 if x_can_increase:
-                    return Move(Direction.RIGHT, (x+1, y))
+                    return Move(Direction.RIGHT, (x + 1, y))
             case Direction.UP_LEFT:
                 if x_can_decrease and y_can_decrease:
-                     return Move(Direction.UP_LEFT, (x-1, y-1))
+                    return Move(Direction.UP_LEFT, (x - 1, y - 1))
             case Direction.UP_RIGHT:
                 if x_can_decrease and y_can_increase:
-                    return Move(Direction.UP_RIGHT, (x-1, y+1))
+                    return Move(Direction.UP_RIGHT, (x - 1, y + 1))
             case Direction.DOWN_LEFT:
                 if x_can_increase and y_can_decrease:
-                    return Move(Direction.DOWN_LEFT, (x+1, y-1))
+                    return Move(Direction.DOWN_LEFT, (x + 1, y - 1))
             case Direction.DOWN_RIGHT:
                 if x_can_increase and y_can_increase:
-                    return Move(Direction.DOWN_RIGHT, (x+1, y+1))
+                    return Move(Direction.DOWN_RIGHT, (x + 1, y + 1))
 
         return None
 
