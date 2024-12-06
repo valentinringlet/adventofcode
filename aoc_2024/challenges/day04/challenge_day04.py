@@ -35,7 +35,9 @@ class ChallengeDay04(Challenge):
         input_data = self.parse_input(input_file_path)
 
         # 2. use input data to find all XMAS'es
-        solution_part1 = self._solve_part1_approach1(input_data)
+        solution_part1 = self._solve_part1_approach2(
+            input_data
+        )  # self._solve_part1_approach1(input_data)
 
         # 3. set solution
         self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
@@ -153,6 +155,143 @@ class ChallengeDay04(Challenge):
                     return Move(Direction.DOWN_RIGHT, (x + 1, y + 1))
 
         return None
+
+    def _solve_part1_approach2(self, input_data: list[str], target_str: str = "XMAS"):
+        horizontal_xmas_occurrences = [
+            [
+                (
+                    int(input_data[y][x : x + len(target_str)] == target_str)
+                    + int(input_data[y][x : x + len(target_str)] == target_str[::-1])
+                    if x < len(input_data[y]) - (len(target_str) - 1)
+                    else 0
+                )
+                for x in range(len(input_data[y]))
+            ]
+            for y in range(len(input_data))
+        ]
+        vertical_xmas_occurrences = [
+            [
+                (
+                    int(
+                        "".join(input_data[y + i][x] for i in range(len(target_str)))
+                        == target_str
+                    )
+                    + int(
+                        "".join(input_data[y + i][x] for i in range(len(target_str)))
+                        == target_str[::-1]
+                    )
+                    if y < len(input_data) - (len(target_str) - 1)
+                    else 0
+                )
+                for x in range(len(input_data[y]))
+            ]
+            for y in range(len(input_data))
+        ]
+        diagonal_xmas_occurrences = [
+            [
+                (
+                    int(
+                        "".join(
+                            [input_data[y + i][x + i] for i in range(len(target_str))]
+                        )
+                        == target_str
+                    )
+                    + int(
+                        "".join(
+                            [input_data[y + i][x + i] for i in range(len(target_str))]
+                        )
+                        == target_str[::-1]
+                    )
+                    if y < len(input_data) - (len(target_str) - 1)
+                    and x < len(input_data[y]) - (len(target_str) - 1)
+                    else 0
+                )
+                for x in range(len(input_data[y]))
+            ]
+            for y in range(len(input_data))
+        ]
+        anti_diagonal_xmas_occurrences = [
+            [
+                (
+                    int(
+                        "".join(
+                            [input_data[y + i][x - i] for i in range(len(target_str))]
+                        )
+                        == target_str
+                    )
+                    + int(
+                        "".join(
+                            [input_data[y + i][x - i] for i in range(len(target_str))]
+                        )
+                        == target_str[::-1]
+                    )
+                    if y < len(input_data) - (len(target_str) - 1)
+                    and x >= len(target_str) - 1
+                    else 0
+                )
+                for x in range(len(input_data[y]))
+            ]
+            for y in range(len(input_data))
+        ]
+
+        # FOR DEBUGGING
+        """
+        with open("debugging_file.txt", "w") as file:
+            file.write("# HORIZONTAL MATCHES:\n")
+            file.write(
+                "\n".join(
+                    [
+                        "".join([str(num) for num in row])
+                        for row in horizontal_xmas_occurrences
+                    ]
+                )
+            )
+            file.write("\n")
+            file.write("# VERTICAL MATCHES:\n")
+            file.write(
+                "\n".join(
+                    [
+                        "".join([str(num) for num in row])
+                        for row in vertical_xmas_occurrences
+                    ]
+                )
+            )
+            file.write("\n")
+            file.write("# DIAGONAL MATCHES:\n")
+            file.write(
+                "\n".join(
+                    [
+                        "".join([str(num) for num in row])
+                        for row in diagonal_xmas_occurrences
+                    ]
+                )
+            )
+            file.write("\n")
+            file.write("# ANTI-DIAGONAL MATCHES:\n")
+            file.write(
+                "\n".join(
+                    [
+                        "".join([str(num) for num in row])
+                        for row in anti_diagonal_xmas_occurrences
+                    ]
+                )
+            )
+            file.write("\n")
+        """
+
+        solution_part1 = sum(
+            [
+                sum([sum(row) for row in count_matrix])
+                for count_matrix in (
+                    horizontal_xmas_occurrences,
+                    vertical_xmas_occurrences,
+                    diagonal_xmas_occurrences,
+                    anti_diagonal_xmas_occurrences,
+                )
+            ]
+        )
+
+        return solution_part1
 
     def _print_solution(self):
         solution = self.get_solution()
