@@ -156,7 +156,8 @@ class ChallengeDay04(Challenge):
 
         return None
 
-    def _solve_part1_approach2(self, input_data: list[str], target_str: str = "XMAS"):
+    @staticmethod
+    def _solve_part1_approach2(input_data: list[str], target_str: str = "XMAS"):
         horizontal_xmas_occurrences = [
             [
                 (
@@ -283,7 +284,8 @@ class ChallengeDay04(Challenge):
 
         return solution_part1
 
-    def _solve_part2(self, input_data: list[str], target_str: str = "MAS"):
+    @staticmethod
+    def _solve_part2(input_data: list[str], target_str: str = "MAS"):
         cross_mas_occurences = [
             [
                 (
