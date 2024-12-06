@@ -20,14 +20,13 @@ class ChallengeDay05(Challenge):
 
     def _solve(self):
         # 1. read input data
-        input_file = "input_day05.txt"  # "test_input_part1.txt"
+        input_file = "input_day05.txt"
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         input_data = self.parse_input(input_file_path)
 
         # 2. solve challenge using input data
         solution_part1 = self._solve_part1(input_data)
         solution_part2 = self._solve_part2(input_data)
-        # PROBLEM: answer is correct on example input, but is too low on actual input...
 
         # 3. set solution
         self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
