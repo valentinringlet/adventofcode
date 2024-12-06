@@ -35,9 +35,8 @@ class ChallengeDay04(Challenge):
         input_data = self.parse_input(input_file_path)
 
         # 2. use input data to find all XMAS'es
-        solution_part1 = self._solve_part1_approach2(
-            input_data
-        )  # self._solve_part1_approach1(input_data)
+        solution_part1 = self._solve_part1_approach1(input_data)
+        # solution_part1 = self._solve_part1_approach2(input_data)
 
         # 3. set solution
         self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
