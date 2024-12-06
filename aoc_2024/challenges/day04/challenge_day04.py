@@ -30,7 +30,7 @@ class ChallengeDay04(Challenge):
 
     def _solve(self):
         # 1. read input data
-        input_file = "test_input_part1.txt"  # "input_day04.txt"
+        input_file = "input_day04.txt"  # "test_input_part1.txt"
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         input_data = self.parse_input(input_file_path)
 
