@@ -162,10 +162,8 @@ class ChallengeDay04(Challenge):
                 (
                     int(input_data[y][x : x + len(target_str)] == target_str)
                     + int(input_data[y][x : x + len(target_str)] == target_str[::-1])
-                    if x < len(input_data[y]) - (len(target_str) - 1)
-                    else 0
                 )
-                for x in range(len(input_data[y]))
+                for x in range(len(input_data[y]) - (len(target_str) - 1))
             ]
             for y in range(len(input_data))
         ]
@@ -180,12 +178,10 @@ class ChallengeDay04(Challenge):
                         "".join(input_data[y + i][x] for i in range(len(target_str)))
                         == target_str[::-1]
                     )
-                    if y < len(input_data) - (len(target_str) - 1)
-                    else 0
                 )
                 for x in range(len(input_data[y]))
             ]
-            for y in range(len(input_data))
+            for y in range(len(input_data) - (len(target_str) - 1))
         ]
         diagonal_xmas_occurrences = [
             [
@@ -202,13 +198,10 @@ class ChallengeDay04(Challenge):
                         )
                         == target_str[::-1]
                     )
-                    if y < len(input_data) - (len(target_str) - 1)
-                    and x < len(input_data[y]) - (len(target_str) - 1)
-                    else 0
                 )
-                for x in range(len(input_data[y]))
+                for x in range(len(input_data[y]) - (len(target_str) - 1))
             ]
-            for y in range(len(input_data))
+            for y in range(len(input_data) - (len(target_str) - 1))
         ]
         anti_diagonal_xmas_occurrences = [
             [
@@ -225,13 +218,10 @@ class ChallengeDay04(Challenge):
                         )
                         == target_str[::-1]
                     )
-                    if y < len(input_data) - (len(target_str) - 1)
-                    and x >= len(target_str) - 1
-                    else 0
                 )
-                for x in range(len(input_data[y]))
+                for x in range(len(target_str) - 1, len(input_data[y]))
             ]
-            for y in range(len(input_data))
+            for y in range(len(input_data) - (len(target_str) - 1))
         ]
 
         # FOR DEBUGGING
