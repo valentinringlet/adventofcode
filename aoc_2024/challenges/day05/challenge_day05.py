@@ -23,7 +23,7 @@ class ChallengeDay05(Challenge):
         self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
 
     def _print_solution(self):
-        solution = self.set_solution(DaySolutionDTO)
+        solution = self.get_solution()
         # TODO: write what the answer represents
         print(
             f"- part 1: The sum of the middle pages of valid page updates is {solution.solution_part1}"
