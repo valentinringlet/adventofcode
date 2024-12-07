@@ -17,17 +17,21 @@ class ChallengeDay07(Challenge):
 
         # 2. solve part 1
         # 2.1. find the equations that could possibly be true
-        valid_equations = []
+        available_operators_part1 = [
+            operator.add,
+            operator.mul,
+        ]
+        valid_equations_part1 = []
         for equation in all_equations:
             result_value, factors = equation
             start_value, remaining_factors = factors[0], factors[1:]
             if self._can_factors_make_target(
-                start_value, remaining_factors, result_value
+                start_value, remaining_factors, result_value, available_operators_part1
             ):
-                valid_equations.append(equation)
+                valid_equations_part1.append(equation)
         # 2.2. compute the solution of part 1
         solution_part1 = sum(
-            [result_value for result_value, factors in valid_equations]
+            [result_value for result_value, factors in valid_equations_part1]
         )
 
         self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
@@ -49,7 +53,11 @@ class ChallengeDay07(Challenge):
             return all_equations
 
     def _can_factors_make_target(
-        self, current_value: int, factors: tuple[int, ...], target_value: int
+        self,
+        current_value: int,
+        factors: tuple[int, ...],
+        target_value: int,
+        available_operators: list[Callable[[int, int], int]],
     ) -> bool:
         if len(factors) == 0:
             if current_value == target_value:
@@ -57,9 +65,12 @@ class ChallengeDay07(Challenge):
             else:
                 return False
         else:
-            for operation in [operator.add, operator.mul]:
+            for operation in available_operators:
                 if self._can_factors_make_target(
-                    operation(current_value, factors[0]), factors[1:], target_value
+                    operation(current_value, factors[0]),
+                    factors[1:],
+                    target_value,
+                    available_operators,
                 ):
                     return True
             return False
