@@ -16,7 +16,7 @@ class ChallengeDay07(Challenge):
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         all_equations = self._parse_input(input_file_path)
 
-        # solve part 1 and 2
+        # solve parts 1 and 2
         solutions = []
         available_operators_part1 = [
             operator.add,
@@ -29,7 +29,7 @@ class ChallengeDay07(Challenge):
             available_operators_part1,
             available_operators_part2,
         ]:
-            valid_equations_part1 = []
+            valid_equations = []
             for equation in all_equations:
                 result_value, factors = equation
                 start_value, remaining_factors = factors[0], factors[1:]
@@ -39,12 +39,13 @@ class ChallengeDay07(Challenge):
                     result_value,
                     available_operators,
                 ):
-                    valid_equations_part1.append(equation)
-            # 2.2. compute the solution of part 1
+                    valid_equations.append(equation)
+            # save the solution
             solutions.append(
-                sum([result_value for result_value, factors in valid_equations_part1])
+                sum([result_value for result_value, factors in valid_equations])
             )
 
+        # save solutions
         self.set_solution(*solutions)
 
     @staticmethod
