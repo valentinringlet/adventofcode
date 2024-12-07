@@ -9,7 +9,7 @@ from shared.helper import (
 def aoc_2024_runner():
     # 1. Ask user what challenge to run
     print_intro_message()
-    user_input = input()
+    user_input = input().strip()
 
     # 2. Continue asking until the user picks a valid challenge id
     while not is_user_input_valid_challenge_id(user_input):
