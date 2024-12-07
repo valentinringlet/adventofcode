@@ -74,7 +74,7 @@ class ChallengeDay06(Challenge):
             new_pos = self._move_one_step_from_pos_in_dir(current_pos, new_dir)
             new_x, new_y = new_pos
 
-            if 0 <= new_y < len(input_data) and 0 <= new_x < len(input_data[0]):
+            if self._is_position_within_map_bounds(new_pos, input_data):
                 # Act based on what object we would walk into next
                 match input_data[new_y][new_x]:
                     case "#":
@@ -95,35 +95,6 @@ class ChallengeDay06(Challenge):
             else:
                 exited_map = True
 
-            """
-            # APPROACH 2: Move in the same direction as much as you can at once 
-            #   until you hit an obstacle or exit the field
-            move_one_step_in_current_dir_action = self._move_one_step_in_dir(
-                current_dir
-            )
-            next_pos = current_pos
-            next_x, next_y = next_pos
-            while (
-                self._is_position_within_map_bounds(next_pos, input_data)
-                and input_data[next_y][next_y] != "#"
-            ):
-                # Move to the next position
-                current_pos = next_pos
-                curr_x, curr_y = current_pos
-                all_guard_positions[curr_y][curr_x] = True
-                # self._show_pos_on_map(current_pos, input_data)
-
-                # Move one further
-                next_pos = move_one_step_in_current_dir_action(next_pos)
-                next_x, next_y = next_pos
-
-            if not self._is_position_within_map_bounds(next_pos, input_data):
-                exited_map = True
-            else:
-                # Guard is blocked, instead of moving forward we turn 90 degrees + move in that direction
-                current_dir = current_dir.turn_90_degrees_clockwise()
-            # """
-
         num_guard_positions = sum(
             [sum([int(x) for x in row]) for row in all_guard_positions]
         )
@@ -135,7 +106,7 @@ class ChallengeDay06(Challenge):
         position: tuple[int, int], input_data: list[str]
     ) -> bool:
         x, y = position
-        return 0 < y < len(input_data) and 0 < x < len(input_data[0])
+        return 0 <= y < len(input_data) and 0 <= x < len(input_data[0])
 
     @staticmethod
     def _move_one_step_from_pos_in_dir(
