@@ -35,7 +35,25 @@ class ChallengeDay07(Challenge):
             [result_value for result_value, factors in valid_equations_part1]
         )
 
-        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
+        # 3. solve part 2
+        # 2.1. find the equations that could possibly be true with restrictions of part 2
+        available_operators_part2 = [
+            operator.add,
+            operator.mul,
+            lambda n1, n2: int(operator.add(str(n1), str(n2))),
+        ]
+        valid_equations_part2 = []
+        for equation in all_equations:
+            result_value, factors = equation
+            start_value, remaining_factors = factors[0], factors[1:]
+            if self._can_factors_make_target(
+                start_value, remaining_factors, result_value, available_operators_part2
+            ):
+                valid_equations_part2.append(equation)
+        # 3.2. compute solution of part 2 based on that
+        solution_part2 = sum(
+            [result_value for result_value, factors in valid_equations_part2]
+        )
 
         self.set_solution(solution_part1, solution_part2)
 
