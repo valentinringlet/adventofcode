@@ -63,7 +63,7 @@ class ChallengeDay06(Challenge):
             [False for _ in range(len(input_data[y]))] for y in range(len(input_data))
         ]
         start_x, start_y = guard_start_pos
-        all_guard_positions[start_y][start_y] = True
+        all_guard_positions[start_y][start_x] = True
 
         current_pos = guard_start_pos
         current_dir = Direction.UP
