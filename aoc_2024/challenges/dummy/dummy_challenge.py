@@ -15,10 +15,6 @@ class DummyChallenge(Challenge):
     def id(cls):
         return CHALLENGE_ID
 
-    def __init__(self):
-        super().__init__()
-        self.__solution = None
-
     def _solve(self):
         # Example logic:
         with open(INPUT_FILE, "r") as file:
@@ -32,11 +28,12 @@ class DummyChallenge(Challenge):
                 else:
                     result += line[0]
 
-        self.set_solution(result)
+        self.set_solution(solution_part1=result, solution_part2="unused")
 
     @staticmethod
     def _is_comment(line: str) -> bool:
         return line.startswith(COMMENT_SYMBOL)
 
     def _print_solution(self):
-        print(f"The secret hidden in the input file is '{self.get_solution()}'")
+        print(f"Solution: ")
+        print(f"The secret message hidden in the input file is '{self.solution_part1}'")
