@@ -1,5 +1,6 @@
 import os
 import operator
+from typing import Callable
 
 from shared.challenge import Challenge, DaySolutionDTO
 
