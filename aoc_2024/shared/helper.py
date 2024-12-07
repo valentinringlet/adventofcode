@@ -39,7 +39,8 @@ def get_selected_challenge(selected_challenge_id: str) -> Challenge:
     solved_challenges = get_solved_challenges()
     selected_challenge_types = list(
         filter(
-            lambda challenge: challenge.id() == selected_challenge_id, solved_challenges
+            lambda challenge: challenge.id().lower() == selected_challenge_id.lower(),
+            solved_challenges,
         )
     )
 
