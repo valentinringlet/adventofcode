@@ -47,17 +47,7 @@ class ChallengeDay06(Challenge):
             return [line.strip() for line in file.readlines() if line.strip() != ""]
 
     def _solve_part1(self, input_data: list[str]) -> int:
-        guard_positions = [
-            (x, y)
-            for y in range(len(input_data))
-            for x in range(len(input_data[y]))
-            if input_data[y][x] == GUARD_SYMBOL
-        ]
-        if len(guard_positions) > 1:
-            raise ValueError(
-                "The guard is at more than 1 position in the starting layout"
-            )
-        guard_start_pos = guard_positions[0]
+        guard_start_pos = self._get_guard_starting_position(input_data)
 
         all_guard_positions = [
             [False for _ in range(len(input_data[y]))] for y in range(len(input_data))
@@ -100,6 +90,21 @@ class ChallengeDay06(Challenge):
         )
 
         return num_guard_positions
+
+    @staticmethod
+    def _get_guard_starting_position(input_data):
+        guard_positions = [
+            (x, y)
+            for y in range(len(input_data))
+            for x in range(len(input_data[y]))
+            if input_data[y][x] == GUARD_SYMBOL
+        ]
+        if len(guard_positions) > 1:
+            raise ValueError(
+                "The guard is at more than 1 position in the starting layout"
+            )
+        guard_start_pos = guard_positions[0]
+        return guard_start_pos
 
     @staticmethod
     def _is_position_within_map_bounds(
