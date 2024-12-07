@@ -53,5 +53,5 @@ class Challenge(metaclass=ABCMeta):
 
     def _print_solution(self):
         print(f"Solution: ")
-        print(f"- part 1: The answer is {self.get_solution_part1()}")
-        print(f"- part 2: The answer is {self.get_solution_part2()}")
+        print(f"- part 1: The answer is {self.solution_part1}")
+        print(f"- part 2: The answer is {self.solution_part2}")
