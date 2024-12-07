@@ -42,11 +42,14 @@ class ChallengeDay06(Challenge):
         )
         print(f"- part 2: {solution.solution_part2}")
 
-    def parse_input(self, file_path: str) -> list[str]:
+    @staticmethod
+    def parse_input(file_path: str) -> list[list[str]]:
         with open(file_path, "r") as file:
-            return [line.strip() for line in file.readlines() if line.strip() != ""]
+            return [
+                list(line.strip()) for line in file.readlines() if line.strip() != ""
+            ]
 
-    def _solve_part1(self, input_data: list[str]) -> int:
+    def _solve_part1(self, input_data: list[list[str]]) -> int:
         guard_start_pos = self._get_guard_starting_position(input_data)
 
         all_guard_positions = [
@@ -92,7 +95,7 @@ class ChallengeDay06(Challenge):
         return num_guard_positions
 
     @staticmethod
-    def _get_guard_starting_position(input_data):
+    def _get_guard_starting_position(input_data: list[list[str]]):
         guard_positions = [
             (x, y)
             for y in range(len(input_data))
@@ -108,7 +111,7 @@ class ChallengeDay06(Challenge):
 
     @staticmethod
     def _is_position_within_map_bounds(
-        position: tuple[int, int], input_data: list[str]
+        position: tuple[int, int], input_data: list[list[str]]
     ) -> bool:
         x, y = position
         return 0 <= y < len(input_data) and 0 <= x < len(input_data[0])
@@ -143,7 +146,7 @@ class ChallengeDay06(Challenge):
                 return lambda pos: (pos[0] - 1, pos[1])
 
     @staticmethod
-    def _show_pos_on_map(pos: tuple[int, int], input_data: list[str]):
+    def _show_pos_on_map(pos: tuple[int, int], input_data: list[list[str]]):
         for y in range(len(input_data)):
             for x in range(len(input_data[y])):
                 if x == pos[0] and y == pos[1]:
