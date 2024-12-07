@@ -32,10 +32,7 @@ class ChallengeDay07(Challenge):
 
         self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
 
-    def _print_solution(self):
-        solution = self.get_solution()
-        print(f"- part 1: {solution.solution_part1}")
-        print(f"- part 2: {solution.solution_part2}")
+        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
 
     @staticmethod
     def _parse_input(file_path: str) -> list[tuple[int, tuple[int, ...]]]:

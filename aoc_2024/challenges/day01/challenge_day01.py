@@ -13,10 +13,6 @@ class Day1Input:
 
 
 class ChallengeDay01(Challenge):
-    def __init__(self):
-        super().__init__()
-        self._sum_of_differences = None
-
     @classmethod
     def id(cls):
         return "Day1"
@@ -43,7 +39,7 @@ class ChallengeDay01(Challenge):
         solution_part2 = similarity_score
 
         # 4. save solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
+        self.set_solution(solution_part1, solution_part2)
 
     @staticmethod
     def parse_input_data() -> Day1Input:
@@ -59,10 +55,10 @@ class ChallengeDay01(Challenge):
         return Day1Input(left_list, right_list)
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
         print(
-            f"- part 1: The sum of differences of the items in the two lists is {solution.solution_part1}"
+            f"- part 1: The sum of differences of the items in the two lists is {self.solution_part1}"
         )
         print(
-            f"- part 2: The similarity score of the two lists is {solution.solution_part2}"
+            f"- part 2: The similarity score of the two lists is {self.solution_part2}"
         )

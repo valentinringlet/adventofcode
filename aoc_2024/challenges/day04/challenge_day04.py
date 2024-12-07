@@ -40,7 +40,7 @@ class ChallengeDay04(Challenge):
         solution_part2 = self._solve_part2(input_data)
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
+        self.set_solution(solution_part1, solution_part2)
 
     @staticmethod
     def parse_input(file_path: str) -> list[str]:
@@ -326,10 +326,10 @@ class ChallengeDay04(Challenge):
         return solution_part2
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
         print(
-            f"- part 1: There are {solution.solution_part1} occurrences of the XMAS in the input"
+            f"- part 1: There are {self.solution_part1} occurrences of XMAS in the input"
         )
         print(
-            f"- part 2: There are {solution.solution_part2} occurrences of the X-MAS'es (cross-MAS) in the input"
+            f"- part 2: There are {self.solution_part2} occurrences of the X-MAS'es (cross-MAS) in the input"
         )

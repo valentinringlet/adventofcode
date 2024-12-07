@@ -4,9 +4,6 @@ from shared.challenge import DaySolutionDTO, Challenge
 
 
 class ChallengeDay02(Challenge):
-    def __init__(self):
-        super().__init__()
-
     @classmethod
     def id(cls):
         return "Day2"
@@ -26,9 +23,7 @@ class ChallengeDay02(Challenge):
         )
 
         # 3. set the solution
-        self.set_solution(
-            DaySolutionDTO(str(num_valid_levels_part1), str(num_valid_levels_part2))
-        )
+        self.set_solution(num_valid_levels_part1, num_valid_levels_part2)
 
     @staticmethod
     def parse_input_data(input_file_path: str) -> list[list[int]]:
@@ -42,8 +37,10 @@ class ChallengeDay02(Challenge):
     def __is_valid_level_part1(self, level: list[int]) -> bool:
         level_is_all_increasing = self.__is_level_fully_increasing(level)
         level_is_all_decreasing = self.__is_level_fully_decreasing(level)
-        level_has_increases_in_range = self.__level_has_increases_and_decreases_in_range(
-            level, lower_bound=1, upper_bound=3
+        level_has_increases_in_range = (
+            self.__level_has_increases_and_decreases_in_range(
+                level, lower_bound=1, upper_bound=3
+            )
         )
 
         return (
@@ -75,10 +72,8 @@ class ChallengeDay02(Challenge):
         return all([lower_bound <= diff <= upper_bound for diff in abs_differences])
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
+        print(f"- part 1: There are {self.solution_part1} valid levels in the input")
         print(
-            f"- part 1: There are {solution.solution_part1} valid levels in the input"
-        )
-        print(
-            f"- part 2: There are {solution.solution_part2} valid levels in the input if you can remove a single number per level"
+            f"- part 2: There are {self.solution_part2} valid levels in the input if you can remove a single number per level"
         )

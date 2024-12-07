@@ -29,15 +29,15 @@ class ChallengeDay05(Challenge):
         solution_part2 = self._solve_part2(input_data)
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
+        self.set_solution(solution_part1, solution_part2)
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
         print(
-            f"- part 1: The sum of the middle pages of valid page updates is {solution.solution_part1}"
+            f"- part 1: The sum of the middle pages of valid page updates is {self.solution_part1}"
         )
         print(
-            f"- part 2: The sum of the middle pages of the invalid page updates (after reordering to make them valid) is {solution.solution_part2}"
+            f"- part 2: The sum of the middle pages of the invalid page updates (after reordering to make them valid) is {self.solution_part2}"
         )
 
     @staticmethod

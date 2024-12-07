@@ -33,14 +33,16 @@ class ChallengeDay06(Challenge):
         solution_part1 = self._solve_part1(input_data)
 
         # 3. set the solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), "not solved yet"))
+        self.set_solution(solution_part1, "not solved yet")
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
         print(
-            f"- part 1: The guard will visit {solution.solution_part1} different positions on the map"
+            f"- part 1: The guard will visit {self.solution_part1} different positions on the map"
         )
-        print(f"- part 2: {solution.solution_part2}")
+        print(
+            f"- part 2: You can put obstructions in {self.solution_part2} different positions to cause the guard to run in a loop"
+        )
 
     @staticmethod
     def parse_input(file_path: str) -> list[list[str]]:

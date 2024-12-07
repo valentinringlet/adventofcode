@@ -9,9 +9,6 @@ MUL_INSTRUCTION_REGEX = r"mul\((\d+),(\d+)\)"
 
 
 class ChallengeDay03(Challenge):
-    def __init__(self):
-        super().__init__()
-
     @classmethod
     def id(cls) -> str:
         return "Day3"
@@ -27,7 +24,7 @@ class ChallengeDay03(Challenge):
         solution_part2 = self._solve_part2(input_data)
 
         # 3. set solution
-        self.set_solution(DaySolutionDTO(str(solution_part1), str(solution_part2)))
+        self.set_solution(solution_part1, solution_part2)
 
     @staticmethod
     def parse_input_data(input_file_path) -> str:
@@ -78,7 +75,9 @@ class ChallengeDay03(Challenge):
                 case "MUL":
                     if mul_enabled:
                         first_param, second_param = instruction[2]
-                        valid_mul_instructions.append((int(first_param), int(second_param)))
+                        valid_mul_instructions.append(
+                            (int(first_param), int(second_param))
+                        )
 
         return sum(
             [
@@ -88,10 +87,10 @@ class ChallengeDay03(Challenge):
         )
 
     def _print_solution(self):
-        solution = self.get_solution()
+        print(f"Solution: ")
         print(
-            f"- part 1: The result of the valid mul instructions is {solution.solution_part1}"
+            f"- part 1: The result of the valid mul instructions is {self.solution_part1}"
         )
         print(
-            f"- part 2: The result of the valid mul instructions which are not disabled is {solution.solution_part2}"
+            f"- part 2: The result of the valid mul instructions which are not disabled is {self.solution_part2}"
         )
