@@ -45,7 +45,7 @@ def get_selected_challenge(selected_challenge_id: str) -> Challenge:
     )
 
     if len(selected_challenge_types) != 1:
-        raise ValueError("Multiple challenges correspond to the provided id")
+        raise ValueError("Could not find a unique challenge for the provided id")
     else:
         selected_challenge_type = selected_challenge_types[0]
         return selected_challenge_type()
