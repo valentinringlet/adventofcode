@@ -16,6 +16,8 @@ class ChallengeDay07(Challenge):
         input_file_path = os.path.join(os.path.dirname(__file__), input_file)
         all_equations = self._parse_input(input_file_path)
 
+        solutions = []
+
         # 2. solve part 1
         # 2.1. find the equations that could possibly be true
         available_operators_part1 = [
@@ -31,8 +33,8 @@ class ChallengeDay07(Challenge):
             ):
                 valid_equations_part1.append(equation)
         # 2.2. compute the solution of part 1
-        solution_part1 = sum(
-            [result_value for result_value, factors in valid_equations_part1]
+        solutions.append(
+            sum([result_value for result_value, factors in valid_equations_part1])
         )
 
         # 3. solve part 2
@@ -51,11 +53,11 @@ class ChallengeDay07(Challenge):
             ):
                 valid_equations_part2.append(equation)
         # 3.2. compute solution of part 2 based on that
-        solution_part2 = sum(
-            [result_value for result_value, factors in valid_equations_part2]
+        solutions.append(
+            sum([result_value for result_value, factors in valid_equations_part2])
         )
 
-        self.set_solution(solution_part1, solution_part2)
+        self.set_solution(*solutions)
 
     @staticmethod
     def _parse_input(file_path: str) -> list[tuple[int, tuple[int, ...]]]:
