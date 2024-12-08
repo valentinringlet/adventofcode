@@ -21,6 +21,14 @@ class ChallengeDay08(Challenge):
                 if signal_map[y][x].isalnum()
             ]
         )
+        num_antinodes = self._get_num_valid_antinodes(all_frequencies, signal_map)
+
+        # PROBLEM: answer is too high
+        self.set_solution(num_antinodes, "not solved yet")
+
+    def _get_num_valid_antinodes(
+        self, all_frequencies: set[str], signal_map: list[list[str]]
+    ) -> int:
         valid_antinodes = set()
         for freq in all_frequencies:
             pos_nodes = [
@@ -30,22 +38,14 @@ class ChallengeDay08(Challenge):
                 if signal_map[y][x] == freq
             ]
             for i in range(len(pos_nodes)):
-                curr_x, curr_y = pos_nodes[i]
-                for other_x, other_y in pos_nodes[i + 1 :]:
-                    pos_diff_x, pos_diff_y = (curr_x - other_x, curr_y - other_y)
-
-                    antinode1 = (curr_x + pos_diff_x, curr_y + pos_diff_y)
-                    antinode2 = (other_x - pos_diff_x, other_y - pos_diff_y)
-                    for possible_antinode in [antinode1, antinode2]:
-                        if self._is_pos_within_map_bounds(
-                            possible_antinode, signal_map
-                        ):
-                            valid_antinodes.add(possible_antinode)
-
+                curr_pos = pos_nodes[i]
+                for other_pos in pos_nodes[i + 1 :]:
+                    antinodes = self._get_antinodes_part1(
+                        curr_pos, other_pos, signal_map
+                    )
+                    valid_antinodes.update(antinodes)
         num_antinodes = len(valid_antinodes)
-
-        # PROBLEM: answer is too high
-        self.set_solution(num_antinodes, "not solved yet")
+        return num_antinodes
 
     @staticmethod
     def _parse_input_data(file_path: str) -> list[list[str]]:
@@ -55,6 +55,26 @@ class ChallengeDay08(Challenge):
                 for line in file.readlines()
                 if line.strip() != ""
             ]
+
+    def _get_antinodes_part1(
+        self,
+        node1: tuple[int, int],
+        node2: tuple[int, int],
+        signal_map: list[list[str]],
+    ) -> set[tuple[int, int]]:
+        antinodes = set()
+        x1, y1 = node1
+        x2, y2 = node2
+
+        pos_diff_x, pos_diff_y = (x1 - x2, y1 - y2)
+
+        antinode1 = (x1 + pos_diff_x, y1 + pos_diff_y)
+        antinode2 = (x2 - pos_diff_x, y2 - pos_diff_y)
+        for possible_antinode in [antinode1, antinode2]:
+            if self._is_pos_within_map_bounds(possible_antinode, signal_map):
+                antinodes.add(possible_antinode)
+
+        return antinodes
 
     @staticmethod
     def _is_pos_within_map_bounds(
