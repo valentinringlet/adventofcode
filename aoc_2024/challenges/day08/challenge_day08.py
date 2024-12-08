@@ -22,12 +22,12 @@ class ChallengeDay08(Challenge):
                 if signal_map[y][x].isalnum()
             ]
         )
-        num_antinodes = self._get_num_valid_antinodes(
+        num_antinodes_part1 = self._get_num_valid_antinodes(
             all_frequencies, signal_map, self._get_antinodes_part1
         )
 
         # PROBLEM: answer is too high
-        self.set_solution(num_antinodes, "not solved yet")
+        self.set_solution(num_antinodes_part1, "not solved yet")
 
     def _get_num_valid_antinodes(
         self,
