@@ -25,9 +25,11 @@ class ChallengeDay08(Challenge):
         num_antinodes_part1 = self._get_num_valid_antinodes(
             all_frequencies, signal_map, self._get_antinodes_part1
         )
+        num_antinodes_part2 = self._get_num_valid_antinodes(
+            all_frequencies, signal_map, self._get_antinodes_part2
+        )
 
-        # PROBLEM: answer is too high
-        self.set_solution(num_antinodes_part1, "not solved yet")
+        self.set_solution(num_antinodes_part1, num_antinodes_part2)
 
     def _get_num_valid_antinodes(
         self,
@@ -79,6 +81,32 @@ class ChallengeDay08(Challenge):
         for possible_antinode in [antinode1, antinode2]:
             if self._is_pos_within_map_bounds(possible_antinode, signal_map):
                 antinodes.add(possible_antinode)
+
+        return antinodes
+
+    def _get_antinodes_part2(
+        self,
+        node1: tuple[int, int],
+        node2: tuple[int, int],
+        signal_map: list[list[str]],
+    ) -> set[tuple[int, int]]:
+        antinodes = set()
+        x1, y1 = node1
+        x2, y2 = node2
+
+        pos_diff_x, pos_diff_y = (x1 - x2, y1 - y2)
+
+        antinode_direction1 = [x1, y1]
+        while self._is_pos_within_map_bounds(antinode_direction1, signal_map):
+            antinodes.add(tuple(antinode_direction1))
+            antinode_direction1[0] += pos_diff_x
+            antinode_direction1[1] += pos_diff_y
+
+        antinode_direction2 = [x2, y2]
+        while self._is_pos_within_map_bounds(antinode_direction2, signal_map):
+            antinodes.add(tuple(antinode_direction2))
+            antinode_direction2[0] -= pos_diff_x
+            antinode_direction2[1] -= pos_diff_y
 
         return antinodes
 
