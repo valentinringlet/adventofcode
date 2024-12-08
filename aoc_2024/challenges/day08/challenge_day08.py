@@ -1,5 +1,5 @@
 import os
-from typing import Callable
+from typing import Callable, Iterable
 
 from shared.challenge import Challenge
 
@@ -84,7 +84,7 @@ class ChallengeDay08(Challenge):
 
     @staticmethod
     def _is_pos_within_map_bounds(
-        pos: tuple[int, int], signal_map: list[list[str]]
+        pos: Iterable[int], signal_map: list[list[str]]
     ) -> bool:
         x, y = pos
         return 0 <= y < len(signal_map) and 0 <= x < len(signal_map[y])
