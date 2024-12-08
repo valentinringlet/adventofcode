@@ -61,7 +61,7 @@ class ChallengeDay08(Challenge):
         pos: tuple[int, int], signal_map: list[list[str]]
     ) -> bool:
         x, y = pos
-        return 0 <= y <= len(signal_map) and 0 <= x <= len(signal_map[0])
+        return 0 <= y < len(signal_map) and 0 <= x < len(signal_map[0])
 
     def _show_map(self, signal_map: list[list[str]]):
         for row in signal_map:
