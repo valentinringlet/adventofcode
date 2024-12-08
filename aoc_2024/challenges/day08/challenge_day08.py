@@ -96,17 +96,21 @@ class ChallengeDay08(Challenge):
 
         pos_diff_x, pos_diff_y = (x1 - x2, y1 - y2)
 
-        antinode_direction1 = [x1, y1]
+        antinode_direction1 = (x1, y1)
         while self._is_pos_within_map_bounds(antinode_direction1, signal_map):
-            antinodes.add(tuple(antinode_direction1))
-            antinode_direction1[0] += pos_diff_x
-            antinode_direction1[1] += pos_diff_y
+            antinodes.add(antinode_direction1)
+            antinode_direction1 = (
+                antinode_direction1[0] + pos_diff_x,
+                antinode_direction1[1] + pos_diff_y,
+            )
 
-        antinode_direction2 = [x2, y2]
+        antinode_direction2 = (x2, y2)
         while self._is_pos_within_map_bounds(antinode_direction2, signal_map):
-            antinodes.add(tuple(antinode_direction2))
-            antinode_direction2[0] -= pos_diff_x
-            antinode_direction2[1] -= pos_diff_y
+            antinodes.add(antinode_direction2)
+            antinode_direction2 = (
+                antinode_direction2[0] - pos_diff_x,
+                antinode_direction2[1] - pos_diff_y,
+            )
 
         return antinodes
 
