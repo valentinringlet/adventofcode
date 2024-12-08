@@ -1,4 +1,5 @@
 import os
+from typing import Callable
 
 from shared.challenge import Challenge
 
@@ -21,13 +22,20 @@ class ChallengeDay08(Challenge):
                 if signal_map[y][x].isalnum()
             ]
         )
-        num_antinodes = self._get_num_valid_antinodes(all_frequencies, signal_map)
+        num_antinodes = self._get_num_valid_antinodes(
+            all_frequencies, signal_map, self._get_antinodes_part1
+        )
 
         # PROBLEM: answer is too high
         self.set_solution(num_antinodes, "not solved yet")
 
     def _get_num_valid_antinodes(
-        self, all_frequencies: set[str], signal_map: list[list[str]]
+        self,
+        all_frequencies: set[str],
+        signal_map: list[list[str]],
+        get_antinodes_method: Callable[
+            [tuple[int, int], tuple[int, int], list[list[str]]], set[tuple[int, int]]
+        ],
     ) -> int:
         valid_antinodes = set()
         for freq in all_frequencies:
@@ -40,9 +48,7 @@ class ChallengeDay08(Challenge):
             for i in range(len(pos_nodes)):
                 curr_pos = pos_nodes[i]
                 for other_pos in pos_nodes[i + 1 :]:
-                    antinodes = self._get_antinodes_part1(
-                        curr_pos, other_pos, signal_map
-                    )
+                    antinodes = get_antinodes_method(curr_pos, other_pos, signal_map)
                     valid_antinodes.update(antinodes)
         num_antinodes = len(valid_antinodes)
         return num_antinodes
