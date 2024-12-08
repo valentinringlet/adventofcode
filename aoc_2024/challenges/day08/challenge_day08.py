@@ -31,8 +31,8 @@ class ChallengeDay08(Challenge):
 
         self.set_solution(num_antinodes_part1, num_antinodes_part2)
 
+    @staticmethod
     def _get_num_valid_antinodes(
-        self,
         all_frequencies: set[str],
         signal_map: list[list[str]],
         get_antinodes_method: Callable[
