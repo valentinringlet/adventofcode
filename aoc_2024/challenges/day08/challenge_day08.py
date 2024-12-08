@@ -89,7 +89,9 @@ class ChallengeDay08(Challenge):
         x, y = pos
         return 0 <= y < len(signal_map) and 0 <= x < len(signal_map[y])
 
-    def _show_map(self, signal_map: list[list[str]]):
+    @staticmethod
+    def _show_map(signal_map: list[list[str]]):
+        """FOR DEBUGGING"""
         for row in signal_map:
             for char in row:
                 print(char, end="")
