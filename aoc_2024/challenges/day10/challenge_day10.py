@@ -1,3 +1,4 @@
+import copy
 import os
 
 from shared.challenge import Challenge
@@ -22,8 +23,9 @@ class ChallengeDay10(Challenge):
                 if line.strip() != ""
             ]
 
-        # solve part 1
+        # solve part 1 and 2
         sum_trailhead_scores = 0
+        sum_trailhead_ratings = 0
         trailhead_positions = [
             (x, y)
             for y in range(len(terrain_map))
@@ -32,19 +34,22 @@ class ChallengeDay10(Challenge):
         ]
         for trailhead_pos in trailhead_positions:
             reachable_max_height_positions = set()
-            positions_to_explore = [(trailhead_pos, TRAILHEAD)]
+            possible_paths_to_reach_max_height_positions = set()
+            positions_to_explore = [(trailhead_pos, TRAILHEAD, [])]
 
             while len(positions_to_explore) != 0:
-                curr_pos, curr_height = positions_to_explore.pop(0)
+                curr_pos, curr_height, curr_path = positions_to_explore.pop(0)
+                next_path = tuple(list(curr_path) + [curr_pos])
 
                 if curr_height == 9:
                     reachable_max_height_positions.add(curr_pos)
+                    possible_paths_to_reach_max_height_positions.add(next_path)
                 else:
                     # add all surrounding nodes with the height + 1 to the list to explore
                     next_height = curr_height + 1
                     positions_to_explore.extend(
                         [
-                            ((x, y), next_height)
+                            ((x, y), next_height, next_path)
                             for (x, y) in self.get_adjacent_positions(
                                 curr_pos, terrain_map
                             )
@@ -55,7 +60,10 @@ class ChallengeDay10(Challenge):
             trailhead_score = len(reachable_max_height_positions)
             sum_trailhead_scores += trailhead_score
 
-        self.set_solution(sum_trailhead_scores, "not solved yet")
+            trailhead_rating = len(possible_paths_to_reach_max_height_positions)
+            sum_trailhead_ratings += trailhead_rating
+
+        self.set_solution(sum_trailhead_scores, sum_trailhead_ratings)
 
     @staticmethod
     def get_adjacent_positions(
