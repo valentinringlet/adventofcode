@@ -11,6 +11,7 @@ from challenges.day06.challenge_day06 import ChallengeDay06
 from challenges.day07.challenge_day07 import ChallengeDay07
 from challenges.day08.challenge_day08 import ChallengeDay08
 from challenges.day09.challenge_day09 import ChallengeDay09
+from challenges.day10.challenge_day10 import ChallengeDay10
 
 
 # TODO: update the list below each time a new problem is resolved
@@ -26,4 +27,5 @@ ALL_SOLVED_CHALLENGES: list[Type[Challenge]] = [
     ChallengeDay07,
     ChallengeDay08,
     ChallengeDay09,
+    ChallengeDay10,
 ]
