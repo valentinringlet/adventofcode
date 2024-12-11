@@ -4,7 +4,7 @@ from shared.challenge import Challenge
 class ChallengeDay11(Challenge):
     @classmethod
     def id(cls) -> str:
-        return "Day11"
+        return "Day11-not fully solved yet"
 
     def _solve(self):
         # TODO
