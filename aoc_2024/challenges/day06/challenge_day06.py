@@ -21,7 +21,7 @@ class Direction(Enum):
 class ChallengeDay06(Challenge):
     @classmethod
     def id(cls) -> str:
-        return "Day6"
+        return "Day6-not fully solved"
 
     def _solve(self):
         # 1. read input data

@@ -36,7 +36,7 @@ class FreeSpaceBlock(Block):
 class ChallengeDay09(Challenge):
     @classmethod
     def id(cls) -> str:
-        return "Day9"
+        return "Day9-not fully solved"
 
     def _solve(self):
         input_file_name = "test_input_day09.txt"  # "input_day09.txt"  #
