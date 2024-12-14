@@ -6,7 +6,7 @@ from shared.challenge import Challenge
 class ChallengeDay11(Challenge):
     @classmethod
     def id(cls) -> str:
-        return "Day11-not fully solved yet"
+        return "Day11"
 
     def _solve(self):
         # parse the input data
