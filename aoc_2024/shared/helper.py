@@ -1,7 +1,11 @@
+from pprint import PrettyPrinter
 from typing import Type
 
 from shared.challenge import Challenge
 from shared.variables import ALL_SOLVED_CHALLENGES
+
+
+pp = PrettyPrinter()
 
 
 def get_solved_challenges() -> list[Type[Challenge]]:
@@ -16,7 +20,14 @@ def print_intro_message():
     print(
         "Hello! The following challenges of the [Advent of Code 2024] have been solved so far:"
     )
-    print(get_solved_challenges_ids())
+    ids_solved_challenges = get_solved_challenges_ids()
+    num_ids_per_line = 5
+    pp.pprint(
+        [
+            ", ".join(ids_solved_challenges[i : i + num_ids_per_line])
+            for i in range(0, len(ids_solved_challenges), num_ids_per_line)
+        ]
+    )
     print("\nWhich challenge would you like to run?")
 
 
