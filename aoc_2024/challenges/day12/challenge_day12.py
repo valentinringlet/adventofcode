@@ -52,15 +52,15 @@ class ChallengeDay12(Challenge):
             plant_type = garden_map[next_plot[1]][next_plot[0]]
             regions.append((new_region, plant_type))
 
-        fence_price = 0
+        fence_price_part1 = 0
         for region_info in regions:
             region_plots, region_type = region_info
             region_area = len(region_plots)
             region_perimeter = self._compute_region_perimeter(region_plots, garden_map)
 
-            fence_price += region_area * region_perimeter
+            fence_price_part1 += region_area * region_perimeter
 
-        self.set_solution(fence_price, "not solved yet")
+        self.set_solution(fence_price_part1, "not solved yet")
 
     def _compute_region_perimeter(
         self, region_plots: list[tuple[int, int]], garden_map: list[list[str]]
