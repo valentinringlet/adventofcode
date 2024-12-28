@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Optional
 
 from shared.challenge import Challenge
 
@@ -50,70 +51,77 @@ class ChallengeDay13(Challenge):
                     x_b, y_b = button_b
                     x_target, y_target = target
 
-                    """
-                    We have a system of 2 equations with 2 unknowns:
-                        1. x_a * n_a + x_b * n_b = x_target (3)
-                        2. y_a * n_a + y_b * n_b = y_target (2)
-                     
-                    Solution:
-                        n_a = (x_target - x_b * n_b)/x_a (2)
-                    
-                        Inserting (2) into (1):
-                        y_a * (x_target - x_b * n_b)/x_a + y_b * n_b = y_target
-                    <=> y_a * x_target/x_a - y_a * x_b * n_b/x_a + y_b * n_b = y_target
-                    <=> n_b * (y_b - y_a * x_b/x_a) = y_target - y_a * x_target/x_a
-                    <=> n_b = (y_target - y_a * x_target/x_a) / (y_b - y_a * x_b/x_a)
-                            = (y_target * x_a - y_a * x_target)/x_a * x_a/(y_b * x_a - y_a * x_b)
-                            = (y_target * x_a - y_a * x_target)/(y_b * x_a - y_a * x_b) (4)
-                        
-                        Inserting (4) into (3):
-                        x_a * n_a + x_b * (y_target * x_a - y_a * x_target)/(y_b * x_a - y_a * x_b) = x_target
-                    <=> x_a * n_a = [(x_target * y_b * x_a - x_target * y_a * x_b) - (x_b * y_target * x_a - x_b * y_a * x_target)] 
-                                        / (y_b * x_a - y_a * x_b)
-                    <=> n_a = (x_target * y_b * x_a - y_target * x_b * x_a) / [x_a * (y_b * x_a - y_a * x_b)]
-                            = (x_target * y_b - y_target * x_b)/(y_b * x_a - y_a * x_b)
-                    """
-                    denominator = y_b * x_a - y_a * x_b
-                    if denominator != 0:
-                        num_button_a_pressed = (
-                            x_target * y_b - y_target * x_b
-                        ) / denominator
-                        num_button_b_pressed = (
-                            y_target * x_a - x_target * y_a
-                        ) / denominator
-
-                        if (
-                            num_button_a_pressed.is_integer()
-                            and num_button_b_pressed.is_integer()
-                        ):
-                            cost = (
-                                int(num_button_a_pressed) * token_cost_button_a
-                                + int(num_button_b_pressed) * token_cost_button_b
-                            )
-                            num_tokens_required_part1 += cost
+                    solution = self.solve_2_equations_with_2_unknowns(
+                        equation1=(x_a, x_b, x_target), equation2=(y_a, y_b, y_target)
+                    )
+                    if solution:
+                        num_button_a_pressed, num_button_b_pressed = solution
+                        cost = (
+                            int(num_button_a_pressed) * token_cost_button_a
+                            + int(num_button_b_pressed) * token_cost_button_b
+                        )
+                        num_tokens_required_part1 += cost
 
                     # solve part 2
                     added = 10000000000000
                     x_target += added
                     y_target += added
 
-                    denominator = y_b * x_a - y_a * x_b
-                    if denominator != 0:
-                        num_button_a_pressed = (
-                            x_target * y_b - y_target * x_b
-                        ) / denominator
-                        num_button_b_pressed = (
-                            y_target * x_a - x_target * y_a
-                        ) / denominator
-
-                        if (
-                            num_button_a_pressed.is_integer()
-                            and num_button_b_pressed.is_integer()
-                        ):
-                            cost = (
-                                int(num_button_a_pressed) * token_cost_button_a
-                                + int(num_button_b_pressed) * token_cost_button_b
-                            )
-                            num_tokens_required_part2 += cost
+                    solution = self.solve_2_equations_with_2_unknowns(
+                        equation1=(x_a, x_b, x_target), equation2=(y_a, y_b, y_target)
+                    )
+                    if solution:
+                        num_button_a_pressed, num_button_b_pressed = solution
+                        cost = (
+                            int(num_button_a_pressed) * token_cost_button_a
+                            + int(num_button_b_pressed) * token_cost_button_b
+                        )
+                        num_tokens_required_part2 += cost
 
         self.set_solution(num_tokens_required_part1, num_tokens_required_part2)
+
+    @staticmethod
+    def solve_2_equations_with_2_unknowns(
+            equation1: tuple[int, int, int], equation2: tuple[int, int, int]
+    ) -> Optional[tuple[int, int]]:
+        # unpack equations
+        x_a, x_b, x_target = equation1
+        y_a, y_b, y_target = equation2
+
+        """
+        HOW TO GET SOLUTION?
+        ------------------------
+        We have a system of 2 equations with 2 unknowns:
+            1. x_a * n_a + x_b * n_b = x_target (3)
+            2. y_a * n_a + y_b * n_b = y_target (2)
+
+        Solution:
+            n_a = (x_target - x_b * n_b)/x_a (2)
+
+            Inserting (2) into (1):
+            y_a * (x_target - x_b * n_b)/x_a + y_b * n_b = y_target
+        <=> y_a * x_target/x_a - y_a * x_b * n_b/x_a + y_b * n_b = y_target
+        <=> n_b * (y_b - y_a * x_b/x_a) = y_target - y_a * x_target/x_a
+        <=> n_b = (y_target - y_a * x_target/x_a) / (y_b - y_a * x_b/x_a)
+                = (y_target * x_a - y_a * x_target)/x_a * x_a/(y_b * x_a - y_a * x_b)
+                = (y_target * x_a - y_a * x_target)/(y_b * x_a - y_a * x_b) (4)
+
+            Inserting (4) into (3):
+            x_a * n_a + x_b * (y_target * x_a - y_a * x_target)/(y_b * x_a - y_a * x_b) = x_target
+        <=> x_a * n_a = [(x_target * y_b * x_a - x_target * y_a * x_b) - (x_b * y_target * x_a - x_b * y_a * x_target)] 
+                            / (y_b * x_a - y_a * x_b)
+        <=> n_a = (x_target * y_b * x_a - y_target * x_b * x_a) / [x_a * (y_b * x_a - y_a * x_b)]
+                = (x_target * y_b - y_target * x_b)/(y_b * x_a - y_a * x_b)
+        """
+
+        # solve them (details on how to establish solution equations below)
+        denominator = y_b * x_a - y_a * x_b
+        if denominator != 0:
+            coeff_a = (x_target * y_b - y_target * x_b) / denominator
+            coeff_b = (y_target * x_a - x_target * y_a) / denominator
+
+            if coeff_a.is_integer() and coeff_b.is_integer():
+                return int(coeff_a), int(coeff_b)
+
+        # if any condition is not fulfilled, there is no solution
+        return None
