@@ -12,7 +12,7 @@ target_regex = "Prize: X=(\d+), Y=(\d+)"
 class ChallengeDay13(Challenge):
     @classmethod
     def id(cls) -> str:
-        return "Day13-workinprogress"
+        return "Day13"
 
     def _solve(self):
         # read input file
@@ -24,7 +24,8 @@ class ChallengeDay13(Challenge):
         # solve part 1
         token_cost_button_a = 3
         token_cost_button_b = 1
-        num_tokens_required = 0
+        num_tokens_required_part1 = 0
+        num_tokens_required_part2 = 0
         for i in range(len(raw_input)):
             button_a_match = re.match(button_a_regex, raw_input[i])
             if button_a_match:
@@ -44,7 +45,7 @@ class ChallengeDay13(Challenge):
                 if len(button_a) != 2 or len(button_b) != 2 or len(target) != 2:
                     raise ValueError("Input does not match required structure")
                 else:
-                    # all_claw_machines.append(ClawMachine(buttonA, buttonB, target))
+                    # solve part 1
                     x_a, y_a = button_a
                     x_b, y_b = button_b
                     x_target, y_target = target
@@ -89,6 +90,30 @@ class ChallengeDay13(Challenge):
                                 int(num_button_a_pressed) * token_cost_button_a
                                 + int(num_button_b_pressed) * token_cost_button_b
                             )
-                            num_tokens_required += cost
+                            num_tokens_required_part1 += cost
 
-        self.set_solution(int(num_tokens_required), "not solved yet")
+                    # solve part 2
+                    added = 10000000000000
+                    x_target += added
+                    y_target += added
+
+                    denominator = y_b * x_a - y_a * x_b
+                    if denominator != 0:
+                        num_button_a_pressed = (
+                            x_target * y_b - y_target * x_b
+                        ) / denominator
+                        num_button_b_pressed = (
+                            y_target * x_a - x_target * y_a
+                        ) / denominator
+
+                        if (
+                            num_button_a_pressed.is_integer()
+                            and num_button_b_pressed.is_integer()
+                        ):
+                            cost = (
+                                int(num_button_a_pressed) * token_cost_button_a
+                                + int(num_button_b_pressed) * token_cost_button_b
+                            )
+                            num_tokens_required_part2 += cost
+
+        self.set_solution(num_tokens_required_part1, num_tokens_required_part2)
