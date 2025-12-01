@@ -32,18 +32,3 @@ for value in values:
     totalTimesStoppedAtZero += int(position == 0)
 
 print(f"PART 1 - The dial stopped {totalTimesStoppedAtZero} times at zero")
-
-# Calculate the number of times the dial passes zero
-position = 50
-totalTimesPassedZero = 0
-for value in values:
-    position += value
-    while position < 0 or position >= 100:
-        if position < 0:
-            position += 100
-        else:
-            position -= 100
-        totalTimesPassedZero += 1
-
-print(f"PART 2 - The dial passed zero {totalTimesPassedZero} times")
-# CURRENT ANSWER: 6590 --> too high
