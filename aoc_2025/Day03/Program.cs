@@ -9,7 +9,7 @@ var joltageMap = inputLines
 
 Console.WriteLine($"Read {joltageMap.Count} battery banks, each with {joltageMap.First().Count} batteries.");
 
-// Part 1 - Find the sum of the maximum voltages in each bank
+// Part 1 - Find the sum of the maximum joltages in each bank
 var totalMaxJoltages = 0;
 foreach (var bank in joltageMap)
 {
@@ -22,4 +22,25 @@ foreach (var bank in joltageMap)
     totalMaxJoltages += maxJoltageInBank;
 }
 
-Console.WriteLine("The sum of the maximum voltages in each bank is " + totalMaxJoltages);
+Console.WriteLine("The sum of the 2 maximum joltages in each bank is " + totalMaxJoltages);
+
+// Part 2 - Find the sum of the maximum joltages in each bank, selecting 12 batteries in each bank
+long totalMaxJoltagesPart2 = 0;
+foreach (var bank in joltageMap)
+{
+    long maxJoltageInBank = 0;
+    var remainingBank = bank.ToList();
+    var numberOfBatteriesToSelect = 12;
+    for (int i = 0; i < numberOfBatteriesToSelect; i++)
+    {
+        var maxBattery = remainingBank.Slice(0, remainingBank.Count - (numberOfBatteriesToSelect - i) + 1).Max();
+        var maxBatteryIndex = remainingBank.IndexOf(maxBattery);
+        remainingBank = remainingBank.Slice(maxBatteryIndex+1, remainingBank.Count - (maxBatteryIndex+1)).ToList();
+
+        maxJoltageInBank = (maxJoltageInBank * 10) + maxBattery;
+    }
+    
+    totalMaxJoltagesPart2 += maxJoltageInBank;
+}
+
+Console.WriteLine("The sum of the 12 maximum joltages in each bank is " + totalMaxJoltagesPart2);
