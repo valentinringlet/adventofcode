@@ -22,7 +22,7 @@ foreach (var bank in joltageMap)
     totalMaxJoltages += maxJoltageInBank;
 }
 
-Console.WriteLine("The sum of the 2 maximum joltages in each bank is " + totalMaxJoltages);
+Console.WriteLine("PART 1 - The sum of the 2 maximum joltages in each bank is " + totalMaxJoltages);
 
 // Part 2 - Find the sum of the maximum joltages in each bank, selecting 12 batteries in each bank
 long totalMaxJoltagesPart2 = 0;
@@ -43,4 +43,4 @@ foreach (var bank in joltageMap)
     totalMaxJoltagesPart2 += maxJoltageInBank;
 }
 
-Console.WriteLine("The sum of the 12 maximum joltages in each bank is " + totalMaxJoltagesPart2);
+Console.WriteLine("PART 2 - The sum of the 12 maximum joltages in each bank is " + totalMaxJoltagesPart2);
