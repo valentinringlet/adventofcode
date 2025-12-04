@@ -3,6 +3,7 @@
 class Program
 {
     private static readonly char PaperRoll = '@';
+    private static readonly char EmptySpace = '.';
 
     static void Main(string[] args)
     {
@@ -37,6 +38,59 @@ class Program
         Console.WriteLine("PART 1 - The number of paper rolls that can be accessed by forklift is " + accessiblePaperRolls);
         if (DEBUG)
             DisplayPaperRollMap(accessiblePaperRollMap);
+        
+
+        // Part 2 - Find the total number of paper rolls that can be removed by forklift
+        var currentPaperRollMap = new List<List<char>>(paperRollMap.Count);
+        var removablePaperRollMap = new List<List<char>>(paperRollMap.Count);
+        paperRollMap.ForEach(row => {
+          currentPaperRollMap.Add(new List<char>(row));
+          removablePaperRollMap.Add(new List<char>(row));
+        });
+        var positionsToCheck = new HashSet<(int row, int col)>();
+        // Using a HashSet to avoid duplicate positions
+        for (int row = 0; row < currentPaperRollMap.Count; row++)
+        {
+            for (int col = 0; col < currentPaperRollMap[row].Count; col++)
+            {
+                if (currentPaperRollMap[row][col] == PaperRoll)
+                {
+                    positionsToCheck.Add((row, col));
+                }
+            }
+        }
+
+        var totalRemovedPaperRolls = 0;
+        while (positionsToCheck.Count > 0)
+        {
+            var (row, col) = positionsToCheck.First();
+            positionsToCheck.Remove((row, col));
+
+            if (CanBeAccessedByForklift(currentPaperRollMap, row, col))
+            {
+                currentPaperRollMap[row][col] = EmptySpace;
+                removablePaperRollMap[row][col] = 'x';
+                totalRemovedPaperRolls++;
+
+                // Register surrounding paper roll positions to be checked again
+                for (int r = row - 1; r <= row + 1; r++)
+                {
+                    for (int c = col - 1; c <= col + 1; c++)
+                    {
+                        if (IsOutOfBounds(currentPaperRollMap, r, c))
+                            continue;
+                        if (r == row && c == col)
+                            continue;
+                        if (currentPaperRollMap[r][c] == PaperRoll)
+                            positionsToCheck.Add((r, c));
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("PART 2 - The total number of paper rolls that can be removed by forklift is " + totalRemovedPaperRolls);
+        if (DEBUG)
+            DisplayPaperRollMap(removablePaperRollMap);
 }
 
     public static bool CanBeAccessedByForklift(List<List<char>> paperRollMap, int row, int col)
