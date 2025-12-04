@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace MyProject;
+namespace Day02;
 class Program
 {
     static void Main(string[] args)
