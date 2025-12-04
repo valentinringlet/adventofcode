@@ -14,37 +14,32 @@ class Program
         var inputLines = File.ReadAllLines(inputFileFullPath);
         var paperRollMap = inputLines
           .Where(line => !string.IsNullOrWhiteSpace(line))
-          .Select(line => line.Select(element => element == PaperRoll).ToList())
+          .Select(line => line.ToList())
           .ToList();
         
         // Part 1 - Find the number of paper rolls that can be accessed by forklift
         var accessiblePaperRolls = 0;
-        var accessiblePaperRollMap = new List<List<char>>();
+        var accessiblePaperRollMap = new List<List<char>>(paperRollMap.Count);
+        paperRollMap.ForEach(row => accessiblePaperRollMap.Add(new List<char>(row)));
         for (int row = 0; row < paperRollMap.Count; row++)
         {
             accessiblePaperRollMap.Add([]);
             for (int col = 0; col < paperRollMap[row].Count; col++)
             {
-                if (paperRollMap[row][col] && CanBeAccessedByForklift(paperRollMap, row, col))
+                if (paperRollMap[row][col] == PaperRoll && CanBeAccessedByForklift(paperRollMap, row, col))
                 {
                     accessiblePaperRolls++;
-                    accessiblePaperRollMap[row].Add('x');
-                }
-                else
-                {
-                    accessiblePaperRollMap[row].Add(paperRollMap[row][col] ? PaperRoll : '.');
+                    accessiblePaperRollMap[row][col] = 'x';
                 }
             }
         }
 
         Console.WriteLine("PART 1 - The number of paper rolls that can be accessed by forklift is " + accessiblePaperRolls);
-        foreach (var line in accessiblePaperRollMap)
-        {
-            if (DEBUG) Console.WriteLine(string.Join("", line));
-        }
-    }
+        if (DEBUG)
+            DisplayPaperRollMap(accessiblePaperRollMap);
+}
 
-    public static bool CanBeAccessedByForklift(List<List<bool>> paperRollMap, int row, int col)
+    public static bool CanBeAccessedByForklift(List<List<char>> paperRollMap, int row, int col)
     {
         var numSurroundingPaperRolls = 0;
         for (int r = row - 1; r <= row + 1; r++)
@@ -55,7 +50,7 @@ class Program
                     continue;
                 if (r == row && c == col)
                     continue;
-                if (paperRollMap[r][c])
+                if (paperRollMap[r][c] == PaperRoll)
                     numSurroundingPaperRolls++;
             }
         }
@@ -63,7 +58,15 @@ class Program
         return numSurroundingPaperRolls < 4;
     }
 
-    public static bool IsOutOfBounds(List<List<bool>> paperRollMap, int row, int col) =>
+    public static bool IsOutOfBounds(List<List<char>> paperRollMap, int row, int col) =>
         row < 0 || row >= paperRollMap.Count 
         || col < 0 || col >= paperRollMap[row].Count;
+    
+    public static void DisplayPaperRollMap(List<List<char>> paperRollMap)
+    {
+        foreach (var line in paperRollMap)
+        {
+            Console.WriteLine(string.Join("", line));
+        }
+    }
 }
