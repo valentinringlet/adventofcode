@@ -9,7 +9,7 @@ class Program
     {
         // Read in the input
         var parentDirectory = Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.FullName;
-        var inputFileFullPath = Path.Combine(parentDirectory, "input.txt");
+        var inputFileFullPath = Path.Combine(parentDirectory, "test.txt");
         var inputLines = File.ReadAllLines(inputFileFullPath)
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .ToList();
@@ -25,38 +25,43 @@ class Program
                 .ToList()
             ).ToList();
         
-        long sumResults = SolveAndSumAllProblems(numbers, operations);
+        var numbersGroupedByProblem = new List<List<long>>();
+        for (var col=0; col < numbers[0].Count; col++)
+        {
+            var currentProblemNumbers = new List<long>();
+            for (var row=0; row < numbers.Count; row++)
+            {
+                currentProblemNumbers.Add(numbers[row][col]);
+            }
+
+            numbersGroupedByProblem.Add(currentProblemNumbers);
+        }
+        
+        long sumResults = SolveAndSumAllProblems(numbersGroupedByProblem, operations);
         Console.WriteLine("PART 1 - The final sum of the answers of all individual problems is " + sumResults);
     }
 
     public static long SolveAndSumAllProblems(List<List<long>> numbers, List<string> operations)
     {
-        long sumResults = 0;
-        for (var col=0; col < numbers[0].Count; col++)
+        var totalSum = 0L;
+        for (var i=0; i < numbers.Count; i++)
         {
-            long currentResult = numbers[0][col];
-            for (var row=1; row < numbers.Count; row++)
+            var currentProblemOperation = operations[i];
+            if (currentProblemOperation == "+")
             {
-                var number = numbers[row][col];
-                var operation = operations[col];
-                if (operation == "+")
-                {
-                    currentResult += number;
-                }
-                else if (operation == "*")
-                {
-                    currentResult *= number;
-                }
-                else
-                {
-                    throw new Exception($"Unknown operation '{operation}'");
-                }
+                totalSum += numbers[i].Sum();
             }
-
-            sumResults += currentResult;
+            else if (currentProblemOperation == "*")
+            {
+                totalSum += numbers[i].Aggregate(1L, (acc, val) => acc * val);
+            }
+            else
+            {
+                throw new Exception($"Unknown operation '{currentProblemOperation}'");
+            }
         }
 
-        return sumResults;
+        return totalSum;
     }
 }
 
