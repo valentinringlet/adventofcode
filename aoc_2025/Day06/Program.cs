@@ -9,7 +9,7 @@ class Program
     {
         // Read in the input
         var parentDirectory = Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.FullName;
-        var inputFileFullPath = Path.Combine(parentDirectory, "test.txt");
+        var inputFileFullPath = Path.Combine(parentDirectory, "input.txt");
         var inputLines = File.ReadAllLines(inputFileFullPath)
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .ToList();
@@ -39,6 +39,50 @@ class Program
         
         long sumResults = SolveAndSumAllProblems(numbersGroupedByProblem, operations);
         Console.WriteLine("PART 1 - The final sum of the answers of all individual problems is " + sumResults);
+
+
+        // Part 2 - Find the sum of the individual problems, but parsing the numbers differently
+        char[] digitChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        var numbersToParse = inputLines.Take(inputLines.Count - 1).ToList();
+        var numbersGroupedByProblemPart2 = new List<List<long>>();
+        var currentNumbers = new List<long>();
+        var col2 = 0;
+        while (col2 < numbersToParse[0].Length)
+        {
+            var currentNumber = 0L;
+            for (var row2 = 0; row2 < numbersToParse.Count; row2++)
+            {
+                if (digitChars.Contains(numbersToParse[row2][col2]))
+                {
+                    var digit = long.Parse(numbersToParse[row2].Substring(col2, 1));
+                    currentNumber = currentNumber * 10 + digit;
+                }
+                else
+                {
+                    // No digit at this row, skip to next row
+                    continue;
+                }
+            }
+
+            if (currentNumber == 0)
+            {
+                // We have hit a column with no numbers, i.e. we finished parsing a problem
+                numbersGroupedByProblemPart2.Add(currentNumbers);
+                currentNumbers = new List<long>();
+                col2 ++;
+                continue;
+            }
+
+            currentNumbers.Add(currentNumber);
+            col2 ++;
+        }
+
+        // Add the last problem
+        numbersGroupedByProblemPart2.Add(currentNumbers);
+
+        // Now perform the calculations again
+        long sumResultsPart2 = SolveAndSumAllProblems(numbersGroupedByProblemPart2, operations);
+        Console.WriteLine("PART 2 - The final sum of the answers of all individual problems (parsed differently) is " + sumResultsPart2);
     }
 
     public static long SolveAndSumAllProblems(List<List<long>> numbers, List<string> operations)
