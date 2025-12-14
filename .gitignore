@@ -3,3 +3,8 @@
 # ignore all PyCharm files
 **/.idea/*
 **/__pycache__/*
+# ignore all Visual Studio Code files
+**/*.vscode/*
+# ignore all build files generated with C#
+**/bin/*
+**/obj/*
